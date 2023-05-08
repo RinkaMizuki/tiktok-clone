@@ -1,0 +1,53 @@
+.account-item {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 200ms ease-in-out 0s;
+  &:hover {
+    background-color: var(--light-grey-003);
+  }
+}
+.account-avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.account-info {
+  cursor: pointer;
+  flex: 1;
+  font-family: 'IBM Plex Sans';
+}
+
+.nickname {
+  color: var(--light-grey);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 22px;
+  margin-top: -2px;
+  max-width: 260px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.check {
+  height: 14px;
+  width: 14px;
+  margin-left: 4px;
+  margin-bottom: 2px;
+  color: rgb(32, 213, 236);
+}
+
+.name {
+  color: var(--light-grey-075);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  max-width: 260px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

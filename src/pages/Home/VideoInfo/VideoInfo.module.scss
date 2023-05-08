@@ -1,0 +1,167 @@
+.content {
+  padding: 20px 0px;
+  min-width: 629px;
+  border-bottom: 1px solid rgba(22, 24, 35, 0.2);
+}
+
+.container {
+  display: flex;
+}
+
+.desc {
+  flex: 1;
+  color: var(--light-info-user);
+}
+
+.avatar {
+  cursor: pointer;
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.nickname {
+  cursor: pointer;
+  font-family: 'SofiaPro', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 25px;
+  display: inline-block;
+  margin-right: 4px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.name {
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 14px;
+  display: inline-block;
+  line-height: 28px;
+}
+
+.hashtag {
+  display: flex;
+  font-size: 16px;
+  line-height: 22px;
+  word-break: break-word;
+
+  & strong:last-child {
+    margin-left: 5px;
+  }
+
+  & strong:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+.music {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.icon-music {
+  margin-right: 5px;
+}
+
+.btn-follow {
+  margin-top: 8px;
+}
+
+//tippyy
+.wrapper {
+  width: 320px;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-avatar {
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.body {
+  margin-top: 8px;
+}
+
+.preview-nickname {
+  cursor: pointer;
+  color: var(--light-grey);
+  font-family: 'SofiaPro', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.preview-check {
+  cursor: pointer;
+  height: 14px;
+  width: 14px;
+  margin-left: 4px;
+  margin-bottom: 2px;
+  color: rgb(32, 213, 236);
+}
+
+.preview-name {
+  cursor: pointer;
+  color: var(--light-grey);
+  font-family: 'ProximaNova', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.preview-btn {
+  height: 35.6px;
+  background-color: var(--white-btn-follow-preview);
+
+  &:hover {
+    background-color: var(--white-btn-follow-preview-hover);
+  }
+}
+
+.footer {
+  margin-top: 8px;
+}
+
+.footer>span:not(:last-child) {
+  margin-right: 6px;
+}
+
+.footer>span:nth-child(1),
+.footer>span:nth-child(3) {
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 20px;
+  display: inline-block;
+}
+
+.footer>span:nth-child(2) {
+  margin-right: 12px;
+}
+
+.footer>span:nth-child(2),
+.footer>span:nth-child(4) {
+  color: var(--light-grey-075);
+  font-size: 17px;
+  line-height: 20px;
+  display: inline-block;
+}

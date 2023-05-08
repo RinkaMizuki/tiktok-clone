@@ -1,0 +1,128 @@
+.wrapper {
+  display: flex;
+}
+
+.interactive {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.video {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  background-size: cover;
+  margin-left: 68px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin-right: 20px;
+  max-width: 326px;
+  height: calc(450px + ((100vw - 768px) / 1152) * 100);
+
+  &:fullscreen {
+    object-fit: contain;
+  }
+}
+
+.btn-like,
+.btn-cmt,
+.btn-share {
+  border: none;
+  background: none;
+  outline: none;
+  padding: 0px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex-direction: column;
+}
+
+.icon-heart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  font-size: 23px;
+  border-radius: 50%;
+  transition: all 200ms ease-in-out 0s;
+  color: var(--light-grey);
+  background-color: var(--light-bg-search);
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+.view {
+  color: var(--light-grey);
+  font-size: 12px;
+  line-height: 17px;
+  text-align: center;
+}
+
+//tippy
+.tippy-container {
+  position: absolute;
+  z-index: 1;
+  border-radius: 8px;
+  bottom: calc(100% + 2px);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;
+  transition: opacity 300ms ease 0s;
+  opacity: 1;
+  transform: translateY(8px);
+  background-color: var(--light-bg-preview);
+  padding-right: 4px;
+  left: -50px;
+
+  &::before {
+    background-color: var(--light-bg-preview);
+    bottom: -17px;
+    left: 50px;
+    content: "";
+    height: 15px;
+    position: absolute;
+    transform: translateX(-50%) translateY(-67%) rotate(45deg);
+    width: 15px;
+  }
+}
+
+.hide {
+  opacity: 0;
+}
+
+.share-wrapper {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  width: 280px;
+  padding: 8px 0px;
+  max-height: 448px;
+  overflow: auto;
+}
+
+.item-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  margin: 0px 3px 0px 4px;
+  position: relative;
+
+  &.item-caret-down {
+    padding: 0 16px;
+    justify-content: center;
+  }
+
+  &:hover {
+    background-color: var(--light-grey-003);
+  }
+}
+
+.hide-caret {
+  display: none;
+}
+
+.item-text {
+  margin-left: 12px;
+}

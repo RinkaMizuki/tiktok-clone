@@ -1,0 +1,111 @@
+.wrapper {
+  min-width: 100px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  line-height: 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 16px;
+
+  // + .wrapper {
+  // }
+  &.disable {
+    pointer-events: none;
+    opacity: 0.5;
+    user-select: none;
+  }
+}
+
+//button size
+.small {
+  min-width: 88px;
+  font-weight: 600;
+  min-height: 28px;
+  padding: 0px 10px;
+}
+
+.large {
+  min-width: 116px;
+  height: 48px;
+  font-size: 18px;
+  padding: 6px 8px;
+  font-weight: 600;
+}
+
+.icon~.title,
+.title~.icon {
+  margin-left: 8px;
+}
+
+.icon {
+  display: inline-flex;
+}
+
+.title {
+  line-height: 24px;
+}
+
+//button types
+
+.text {
+  background-color: var(--white-discover);
+  border-color: rgba(22, 24, 35, 0.12);
+  color: var(--light-btn-chat-notice);
+  min-width: 110px;
+  padding: 5px 14px;
+  margin-left: 0;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.2rem;
+  transition: background-color 250ms ease 0s;
+
+  &:hover {
+    background-color: var(--light-grey-003);
+  }
+}
+
+.rounded {
+  padding: 4px 8px;
+  border-color: rgba(22, 24, 35, 0.12);
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 8px;
+  border-radius: 52px;
+  text-align: center;
+  color: var(--light-grey-075);
+  background-color: var(--white-btn-app);
+  white-space: nowrap;
+  font-size: 14px;
+
+  &:hover {
+    border-color: rgba(22, 24, 35, 0.2);
+    background-color: var(--white-btn-hover);
+  }
+}
+
+.primary {
+  padding: 5px 0px;
+  color: var(--white) !important;
+  background-color: rgb(254, 44, 85);
+
+  &:hover {
+    border-color: var(--primary);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(254, 44, 85);
+  }
+}
+
+.outline {
+  color: var(--primary);
+  border-color: currentColor;
+  background-color: var(--white-btn-follow);
+
+  &:hover {
+    border-color: var(--primary);
+    background-color: var(--white-btn-follow-hover);
+  }
+}

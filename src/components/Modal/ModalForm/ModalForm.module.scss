@@ -1,0 +1,144 @@
+.modal-mask {
+    align-items: center;
+    background: rgba(0, 0, 0, .5);
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    position: fixed;
+    z-index: 99999;
+}
+
+.wrapper {
+    background-color: var(--light-bg-preview);
+    border-radius: 8px;
+    height: 80%;
+    margin: auto;
+    max-height: 693px;
+    overflow: hidden;
+    position: relative;
+    transform: none;
+    transition: all .3s cubic-bezier(.075, .82, .165, 1) 0s;
+}
+
+.animationShow {
+    animation: showFormLogin .33s linear;
+}
+
+.animationHide {
+    animation: hiddenFormLogin .23s linear;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 48px 0 0;
+    width: 483px;
+}
+
+.inner {
+    align-items: center;
+    flex: 1 1;
+    justify-content: center;
+    overflow: overlay;
+    overscroll-behavior-y: contain;
+}
+
+.title {
+    color: var(--light-btn-chat-notice);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: normal;
+    margin: 16px auto;
+    text-align: center;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    position: relative;
+    width: 375px;
+}
+
+.btn-form-login {
+    height: 44px;
+    margin-bottom: 16px;
+    justify-content: center;
+}
+
+.icon {
+    display: flex;
+    height: 20px;
+    left: 15px;
+    position: absolute;
+    width: 20px;
+}
+
+.close-btn {
+    align-items: center;
+    background-color: var(--light-grey-003);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    height: 40px;
+    justify-content: center;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 40px;
+    z-index: 1;
+}
+
+.cancel-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    color: var(--light-btn-chat-notice);
+}
+
+.footer {
+    align-items: center;
+    border-top: 0.5px solid var(--light-btn-chat-notice);
+    display: flex;
+    font-size: 15px;
+    font-weight: 400;
+    height: 64px;
+    justify-content: center;
+    line-height: 18px;
+    width: 100%;
+}
+
+.notify {
+    color: var(--light-btn-chat-notice);
+    display: flex;
+
+    & p {
+        color: var(--primary);
+        font-weight: 600;
+        margin-left: 5px;
+    }
+}
+
+@keyframes showFormLogin {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes hiddenFormLogin {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+}

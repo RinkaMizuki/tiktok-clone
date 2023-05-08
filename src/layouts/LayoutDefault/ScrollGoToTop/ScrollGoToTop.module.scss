@@ -1,0 +1,23 @@
+.btn-step {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  background-color: var(--primary);
+}
+
+.iconGoToTop {
+  font-size: 18px;
+  transform: rotate(-90deg);
+  color: var(--white);
+}
+
+.show {
+  transform: none;
+}
+.hide {
+  transform: translateY(40px);
+}

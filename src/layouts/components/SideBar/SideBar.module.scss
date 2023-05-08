@@ -1,0 +1,37 @@
+.wrapper {
+  width: 100%;
+  max-width: 348px;
+  height: calc(100vh - 60px);
+  padding: 20px 0 26px 8px;
+  position: fixed;
+  overflow-y: scroll;
+  top: 60px;
+  bottom: 0;
+  background-color: var(--white-sidebar);
+}
+.login-to-follow {
+  position: relative;
+  padding: 20px 8px 24px 8px;
+  &::before {
+    content: '';
+    position: absolute;
+    height: 0.5px;
+    left: 8px;
+    right: 8px;
+    background-color: rgba(22, 24, 35, 0.12);
+    top: 0;
+  }
+}
+.desc {
+  color: var(--light-grey-05);
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.login-btn {
+  font-family: 'SofiaPro';
+  font-weight: 700;
+  width: 100%;
+  margin-left: 0;
+  margin-top: 20px;
+}

@@ -1,0 +1,27 @@
+.wrapper {
+  padding: 16px 0 0 8px;
+  color: var(--light-grey-05);
+  border-top: 1px solid var(--light-line-search);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+
+  ~span,
+  li {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 17px;
+    display: inline-block;
+    margin-right: 6px;
+    margin-top: 5px;
+  }
+
+  & li:hover {
+    cursor: pointer;
+    color: var(--light-grey-05);
+    text-decoration: underline;
+  }
+}

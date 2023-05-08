@@ -1,0 +1,94 @@
+.search {
+  position: relative;
+  width: 415px;
+  height: var(--height-search);
+  background-color: var(--light-bg-search);
+  border-radius: 92px;
+  border: 1px solid var(--transparent);
+  padding-left: 16px;
+  display: flex;
+  input {
+    height: 100%;
+    flex: 1;
+    font-family: var(--font-family);
+    font-size: 1.6rem;
+    font-weight: 200;
+    padding-right: 43px;
+    background-color: transparent;
+    caret-color: var(--primary);
+    &:not(:placeholder-shown) ~ .search-button {
+      color: #4c4e57;
+    }
+  }
+  ::placeholder {
+    color: var(--light-placeholder);
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    right: var(--search-btn-width);
+    top: 50%;
+    width: 1px;
+    background-color: var(--light-line-search);
+    height: calc(var(--height-search) - 18px);
+    transform: translateY(-50%);
+  }
+  &:focus-within {
+    border-color: #c5c6c9;
+  }
+}
+//search
+.search-wrapper {
+  flex-basis: 40%;
+  margin-left: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-result {
+  width: 415px;
+}
+.search-title {
+  padding: 5px 12px;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #a2a3a7;
+}
+.clear,
+.loading {
+  position: absolute;
+  right: calc(var(--search-btn-width) + 16px);
+  top: 53%;
+  transform: translateY(-50%);
+  color: #a6a7ab;
+}
+
+.loading {
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  from {
+    transform: translateY(-50%) rotate(0);
+  }
+  //giữ lại thuộc tính translate Y để cho nó k bị ghi đè
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+.search-button {
+  width: var(--search-btn-width);
+  height: 100%;
+  border-top-right-radius: 92px;
+  border-bottom-right-radius: 92px;
+  color: var(--light-btn-search);
+  font-size: 1.9rem;
+  &:hover {
+    background: rgba(22, 24, 35, 0.03);
+    cursor: pointer;
+  }
+  &:active {
+    background: rgba(22, 24, 35, 0.06);
+  }
+}

@@ -1,0 +1,179 @@
+.wrapper {
+  --background-color-search: #f1f1f2;
+  --height-search: 46px;
+  --height-caret: 28px;
+  --search-btn-width: 52px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  background-color: var(--white-header);
+  width: 100%;
+  height: var(--default-layout-header-height);
+  box-shadow: 0px 1px 1px var(--light-shadow-header);
+  display: flex;
+  justify-content: center;
+}
+
+.inner {
+  width: var(--default-layout-width);
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px 0 16px;
+
+  >img {
+    cursor: pointer;
+  }
+}
+
+.logo-link {
+  display: flex;
+  flex-basis: 30%;
+}
+
+.nav-logo {
+  content: var(--nav-logo);
+}
+
+//search
+.search {
+  position: relative;
+  width: 361px;
+  height: var(--height-search);
+  background-color: var(--background-color-search);
+  border-radius: 92px;
+  border: 1px solid transparent;
+  padding-left: 16px;
+  display: flex;
+
+  input {
+    flex: 1;
+    font-size: 1.6rem;
+    font-weight: 200;
+    background-color: transparent;
+    caret-color: var(--primary);
+    height: 100%;
+
+    &:not(:placeholder-shown)~.search-button {
+      color: #4c4e57;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: var(--search-btn-width);
+    top: 50%;
+    width: 1px;
+    background-color: rgba(22, 24, 35, 0.12);
+    height: calc(var(--height-search) - 18px);
+    transform: translateY(-50%);
+  }
+
+  &:focus-within {
+    border-color: #c5c6c9;
+  }
+}
+
+.search-result {
+  width: 361px;
+}
+
+.search-title {
+  padding: 5px 12px;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #a2a3a7;
+}
+
+.clear,
+.loading {
+  position: absolute;
+  right: calc(var(--search-btn-width) + 16px);
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a6a7ab;
+}
+
+.search-button {
+  width: var(--search-btn-width);
+  height: 100%;
+  border-top-right-radius: 92px;
+  border-bottom-right-radius: 92px;
+  color: #a6a7ab;
+  font-size: 1.9rem;
+
+  &:hover {
+    background: rgba(22, 24, 35, 0.03);
+    cursor: pointer;
+  }
+
+  &:active {
+    background: rgba(22, 24, 35, 0.06);
+  }
+}
+
+.action {
+  margin-right: 5px;
+  flex-basis: 30%;
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+
+  &.gap {
+    column-gap: 20px;
+  }
+}
+
+//user
+.custom-login {
+  color: rgba(22, 24, 35, 0.75);
+}
+
+.more-icon {
+  display: flex;
+  font-size: 20px;
+  margin-left: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--light-btn-chat-notice);
+}
+
+.user-btn {
+  font-size: 2.4rem;
+  background-color: transparent;
+  cursor: pointer;
+  height: 2.6rem;
+  position: relative;
+}
+
+.badge {
+  font-weight: 600;
+  font-size: 1.4rem;
+  line-height: 2rem;
+  left: 1.6rem;
+  font-family: var(--font-family);
+  color: var(--white);
+  background-color: var(--primary);
+  min-width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  position: absolute;
+  top: -20%;
+}
+
+.user-avatar {
+  cursor: pointer;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+}
+
+.btn-dark {
+  color: var(--light-btn-chat-notice);
+}

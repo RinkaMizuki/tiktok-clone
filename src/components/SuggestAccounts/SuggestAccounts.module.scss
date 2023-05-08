@@ -1,0 +1,39 @@
+.wrapper {
+  padding: 16px 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 0.5px;
+    left: 8px;
+    right: 8px;
+    background-color: var(--light-line-search);
+    top: 0;
+  }
+}
+
+.label {
+  padding: 0 8px;
+  color: var(--light-grey-064);
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.more-btn {
+  background: transparent;
+  border: none;
+  padding: 0px 8px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.see-all {
+  font-family: 'IBM Plex Sans';
+  color: rgb(254, 44, 85);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+}

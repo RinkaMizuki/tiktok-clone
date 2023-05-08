@@ -1,0 +1,73 @@
+.wrapper {
+  display: flex;
+}
+
+.desc {
+  flex: 1;
+  color: var(--light-info-user);
+}
+
+.avatar {
+  cursor: pointer;
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.nickname {
+  cursor: pointer;
+  font-family: 'SofiaPro', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 25px;
+  display: inline-block;
+  margin-right: 4px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.name {
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 14px;
+  display: inline-block;
+  line-height: 28px;
+}
+
+.hashtag {
+  display: flex;
+  font-size: 16px;
+  line-height: 22px;
+  word-break: break-word;
+
+  & strong:last-child {
+    margin-left: 5px;
+  }
+
+  & strong:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+.music {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.icon-music {
+  margin-right: 5px;
+}
+
+.btn-follow {
+  margin-top: 8px;
+}
