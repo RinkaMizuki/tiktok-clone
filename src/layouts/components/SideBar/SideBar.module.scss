@@ -1,6 +1,6 @@
 .wrapper {
   width: 100%;
-  max-width: 348px;
+  max-width: 232px;
   height: calc(100vh - 60px);
   padding: 20px 0 26px 8px;
   position: fixed;
@@ -9,19 +9,22 @@
   bottom: 0;
   background-color: var(--white-sidebar);
 }
+
 .login-to-follow {
   position: relative;
   padding: 20px 8px 24px 8px;
+
   &::before {
     content: '';
     position: absolute;
     height: 0.5px;
     left: 8px;
     right: 8px;
-    background-color: rgba(22, 24, 35, 0.12);
+    background-color: var(--light-line-search);
     top: 0;
   }
 }
+
 .desc {
   color: var(--light-grey-05);
   font-size: 16px;
@@ -34,4 +37,5 @@
   width: 100%;
   margin-left: 0;
   margin-top: 20px;
+  background-color: var(--white-btn-app);
 }

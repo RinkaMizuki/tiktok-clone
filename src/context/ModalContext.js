@@ -1,9 +1,9 @@
 import { createContext } from "react";
-import { useModal } from "~/hooks";
-import { ModalForm } from '~/components/Modal'
+import { useModal } from '~/hooks';
+import { ModalForm } from '~/components/Modal';
 export const ModuleContext = createContext();
 
-function ModuleContextProvider({ children }) {
+function ModalContextProvider({ children }) {
 
     const [ModalFormComponent, handleShowModalForm] = useModal(ModalForm);
 
@@ -14,4 +14,4 @@ function ModuleContextProvider({ children }) {
         </ModuleContext.Provider>
     )
 }
-export default ModuleContextProvider;
+export default ModalContextProvider;

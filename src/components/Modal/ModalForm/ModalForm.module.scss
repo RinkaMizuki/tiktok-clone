@@ -17,15 +17,14 @@
     overflow: hidden;
     position: relative;
     transform: none;
-    transition: all .3s cubic-bezier(.075, .82, .165, 1) 0s;
 }
 
 .animationShow {
-    animation: showFormLogin .33s linear;
+    animation: showFormLogin .3s cubic-bezier(.075, .82, .165, 1) 0s;
 }
 
 .animationHide {
-    animation: hiddenFormLogin .23s linear;
+    animation: hiddenFormLogin .3s cubic-bezier(.075, .82, .165, 1) 0s;
 }
 
 .container {
@@ -36,44 +35,6 @@
     width: 483px;
 }
 
-.inner {
-    align-items: center;
-    flex: 1 1;
-    justify-content: center;
-    overflow: overlay;
-    overscroll-behavior-y: contain;
-}
-
-.title {
-    color: var(--light-btn-chat-notice);
-    font-size: 32px;
-    font-weight: 700;
-    line-height: normal;
-    margin: 16px auto;
-    text-align: center;
-}
-
-.list {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    position: relative;
-    width: 375px;
-}
-
-.btn-form-login {
-    height: 44px;
-    margin-bottom: 16px;
-    justify-content: center;
-}
-
-.icon {
-    display: flex;
-    height: 20px;
-    left: 15px;
-    position: absolute;
-    width: 20px;
-}
 
 .close-btn {
     align-items: center;
@@ -96,9 +57,33 @@
     color: var(--light-btn-chat-notice);
 }
 
+.agreement {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--white-content);
+    border-bottom: 1px solid var(--light-grey-003);
+    padding: 16px 30px;
+    margin-bottom: unset;
+}
+
+.atext {
+    color: var(--light-grey-05);
+    font-family: 'ProximaNova', sans-serif;
+    font-size: 12px;
+    line-height: 15px;
+    width: 375px;
+    text-align: center;
+
+    & .alink:hover {
+        text-decoration: underline;
+    }
+}
+
 .footer {
     align-items: center;
-    border-top: 0.5px solid var(--light-btn-chat-notice);
+    border-top: 1px solid var(--light-bg-search);
     display: flex;
     font-size: 15px;
     font-weight: 400;
@@ -116,6 +101,13 @@
         color: var(--primary);
         font-weight: 600;
         margin-left: 5px;
+        position: relative;
+        z-index: 10;
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
     }
 }
 
@@ -138,7 +130,7 @@
     }
 
     100% {
-        opacity: 0;
-        transform: scale(0);
+        opacity: 0.2;
+        transform: scale(0.1);
     }
 }

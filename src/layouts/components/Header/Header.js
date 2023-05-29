@@ -152,12 +152,14 @@ function Header() {
   };
   //set state
   const { user } = UserAuth();
-  const handleShowModalForm = useContext(ModuleContext);
-  console.log(handleShowModalForm);
+
+  const { handleShowModalForm } = useContext(ModuleContext);
+
   const props = {};
   if (user) {
     props.to = '/upload';
   } else {
+
   }
 
   return (
@@ -171,7 +173,7 @@ function Header() {
         <Search />
 
         <div className={cx('action', user && 'gap')}>
-          <Button {...props} text iconUpload={<Icons.UploadIcon />}>
+          <Button {...props} text iconUpload={<Icons.UploadIcon />} onClick={handleShowModalForm}>
             Upload
           </Button>
           {user ? (

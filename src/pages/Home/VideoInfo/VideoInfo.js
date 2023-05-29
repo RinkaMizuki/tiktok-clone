@@ -24,16 +24,16 @@ function VideoInfo({ data }) {
               <div tabIndex="-1" {...attrs} >
                 <WrapperPopper className={cx('wrapper')}>
                   <div className={cx('header')}>
-                    <Image className={cx('preview-avatar')} src={data.data.avatar} alt="user" />
+                    <Image className={cx('preview-avatar')} src={data.user.avatar} alt="user" />
                     <Button outline className={cx('preview-btn')}>Follow</Button>
                   </div>
                   <div className={cx('body')}>
-                    <span className={cx('preview-nickname')}>{data.data.nickname}</span>
-                    <p className={cx('preview-name')}>{data.data.name}</p>
+                    <span className={cx('preview-nickname')}>{data.user.nickname}</span>
+                    <p className={cx('preview-name')}>{data.user.first_name}</p>
                     <p className={cx('footer')}>
-                      <span>{`10.3M`}</span>
+                      <span>{data.user.followers_count}</span>
                       <span>Follower</span>
-                      <span>{`23.4M`}</span>
+                      <span>{data.user.likes_count}</span>
                       <span>Likes</span>
                     </p>
                   </div>
@@ -42,27 +42,21 @@ function VideoInfo({ data }) {
             )}
           >
             <div>
-              <Image className={cx('avatar')} src={data.data.avatar} alt="Rinka Mizuki" />
+              <Image className={cx('avatar')} src={data.user.avatar} alt="Rinka Mizuki" />
             </div>
           </Tippy>
         </div>
         <div className={cx('desc')}>
           <div className={cx('info-user')}>
-            <h3 className={cx('nickname')}>{data.data.nickname}</h3>
-            <span className={cx('name')}>{data.data.name}</span>
+            <h3 className={cx('nickname')}>{data.user.nickname}</h3>
+            <span className={cx('name')}>{data.user.first_name}</span>
           </div>
           <div className={cx('hashtag')}>
-            <p>{data.data.content}</p>
-            <strong>
-              <a href="#">{data.data.tag}</a>
-            </strong>
-            <strong>
-              <a href="#">#j4f</a>
-            </strong>
+            <p>{data.description}</p>
           </div>
           <div className={cx('music')}>
             <FontAwesomeIcon className={cx('icon-music')} icon={faMusic} />
-            <a href="#">nhạc nền - Yomein was a popular idol</a>
+            <a href="#">{data.music}</a>
           </div>
         </div>
         <div className={cx('btn-follow')}>

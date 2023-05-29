@@ -14,14 +14,16 @@ function AccountPreview({ data, children, label }) {
   const { user } = UserAuth();
 
   return (
-    <div>
+    <>
       {user && label === 'Following accounts' ? (
         <>{children}</>
       ) : (
         <Tippy
+          appendTo={document.body}
           delay={[1000, 400]}
           offset={[-20, 0]}
           interactive
+          zIndex={9999}
           placement="bottom"
           render={(attrs) => (
             <div tabIndex="-1" {...attrs}>
@@ -48,7 +50,7 @@ function AccountPreview({ data, children, label }) {
           {children}
         </Tippy>
       )}
-    </div>
+    </>
   );
 }
 

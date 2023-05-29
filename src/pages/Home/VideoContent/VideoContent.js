@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useElementOnScreen } from '~/hooks';
 import Tippy from '@tippyjs/react/headless';
 import { CaretDownSmall, Email, Embed, Facebook, Line, Linked, LinkedIn, Pinterest, Send, Telegram, Twitter, WhatsApp } from '~/components/Icons';
-import './App.css';
 
 const cx = classNames.bind(styles);
 
@@ -61,7 +60,6 @@ const listMediaSocial = [
 function VideoContent({ data }) {
   const [playing, setPlaying] = useState(false);
   const [itemList, setItemList] = useState(false);
-
   const videoRef = useRef();
   const caretRef = useRef();
 
@@ -85,17 +83,16 @@ function VideoContent({ data }) {
     }
   }, [isVisible]);
 
+
   const loadListItem = itemList ? listMediaSocial.length : 5;
 
   const handleShowItem = () => {
-    setItemList(!itemList);
+    setItemList(true);
   }
   useEffect(() => {
     if (loadListItem > 5) {
-      // console.log(caretRef.current);
       caretRef.current?.classList.add('hide-caret');
     } else {
-      // console.log(123);
       caretRef.current?.classList.remove('hide-caret');
 
     }
@@ -104,9 +101,24 @@ function VideoContent({ data }) {
     setItemList(false);
   }
 
+  const {
+    meta: {
+      video: {
+        resolution_x: videoWidth,
+        resolution_y: videoHeight,
+      }
+    }
+  } = data;
+
+  const directionVideoClass = videoWidth - videoHeight > 0 ? 'horizontal' : 'vertical';
   return (
     <div className={cx('wrapper')}>
-      <video ref={videoRef} src={data.data.video} className={cx('video')} controls loop></video>
+      <div className={cx('video-container', {
+        [directionVideoClass]: directionVideoClass,
+      })}>
+        <img src={data.thumb_url} className={cx('thumb-video')}></img>
+        <video ref={videoRef} src={data.file_url} className={cx('video')} muted controls loop></video>
+      </div>
 
       <div className={cx('interactive')}>
         <button className={cx('btn-like')}>
@@ -114,7 +126,7 @@ function VideoContent({ data }) {
             <FontAwesomeIcon icon={faHeart} />
           </span>
           <strong className={cx('view')}>
-            <span>{data.data.like}</span>
+            <span>{data.likes_count}</span>
           </strong>
         </button>
 
@@ -123,7 +135,7 @@ function VideoContent({ data }) {
             <FontAwesomeIcon icon={faComment} />
           </span>
           <strong className={cx('view')}>
-            <span>{data.data.cmt}</span>
+            <span>{data.comments_count}</span>
           </strong>
         </button>
 
@@ -146,7 +158,7 @@ function VideoContent({ data }) {
                     <a ref={caretRef} href='#' className={cx('item-wrapper', {
                       'item-caret-down': 'item-caret-down',
                     })} onClick={handleShowItem}>
-                      <CaretDownSmall />
+                      {itemList ? null : <CaretDownSmall />}
                     </a>
                   </div>
                 </div>
@@ -158,7 +170,7 @@ function VideoContent({ data }) {
                 <FontAwesomeIcon icon={faShare} />
               </span>
               <strong className={cx('view')}>
-                <span>{data.data.share}</span>
+                <span>{data.shares_count}</span>
               </strong>
             </button>
           </Tippy>

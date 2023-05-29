@@ -28,6 +28,7 @@
   --light-grey-064: rgba(22, 24, 35, 0.64);
   --light-grey-05: rgba(22, 24, 35, 0.5);
   --light-grey-003: rgba(22, 24, 35, 0.03);
+  --light-grey-034: rgba(22, 24, 35, 0.34);
   --light-bg-search: rgba(22, 24, 35, 0.06);
   --light-placeholder: rgba(22, 24, 35, 0.664);
   --light-line-search: rgba(22, 24, 35, 0.12);
@@ -35,6 +36,7 @@
   --dark-grey-09: rgba(255, 255, 255, 0.9);
   --dark-grey-075: rgba(255, 255, 255, 0.75);
   --dark-grey-05: rgba(255, 255, 255, 0.5);
+  --dark-grey-034: rgba(255, 255, 255, 0.34);
   --dark-black-18: rgb(18, 18, 18, 1);
   --dark-black-37: rgb(37, 37, 37);
   --dark-black-46: rgba(46, 46, 46, 1);
@@ -46,7 +48,6 @@
   --dark-btn-follow-hover: rgb(32 20 22);
   --dark-btn-follow-preview-hover: rgba(254, 44, 85, 0.06);
   --dark-shadow-header: rgb(255 255 255 / 12%);
-
   //size
   --default-layout-header-height: 60px;
   // --default-layout-width: 1150px;
@@ -80,6 +81,7 @@
   --light-grey-05: var(--dark-grey-05);
   --light-grey-003: var(--dark-black-004);
   --light-grey-075: var(--dark-grey-075);
+  --light-grey-034: var(--dark-grey-034);
   --light-grey-064: var(--dark-grey-075);
   --light-grey: var(--dark-grey-09);
 

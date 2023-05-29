@@ -1,48 +1,73 @@
 import VideoInfo from './VideoInfo';
-import { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '~/firebase';
+import { useEffect, useRef, useState } from 'react';
+// import { collection, getDocs } from 'firebase/firestore';
+// import { db } from '~/firebase';
 import { UserAuth } from '~/context/AuthContext';
-import UploadVideoInfo from './UploadVideoInfo';
-import UploadVideo from './UploadVideo/UploadVideo';
+// import UploadVideoInfo from './UploadVideoInfo';
+// import UploadVideo from './UploadVideo/UploadVideo';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
+import { videoService } from '~/services/videoService';
+import { InView } from 'react-intersection-observer';
+import TiktokLoading from '~/components/Loadings/TiktokLoading';
 
 const cx = classNames.bind(styles);
 
 function Home() {
   const [videos, setVideos] = useState([]);
+  const [page, setPage] = useState(10);
+  //ref
 
-  useEffect(() => {
-    // document.querySelector('#focus').focus();
-    const videosCollectionRef = collection(db, 'videos');
-    getDocs(videosCollectionRef)
-      .then((res) => {
-        const vds = res.docs.map((doc) => ({
-          data: doc.data(),
-          id: doc.id,
-        }));
-        setVideos(vds);
+  const pageRandom = useRef([]);
+
+  const handleGetPageRandom = (callback) => {
+    if (callback < 1) return;
+    function getListVideo() {
+      return new Promise((resolve, reject) => {
+        videoService(callback)
+          .then((res) => {
+            resolve(res);
+          })
       })
-      .catch((err) => console.error(err));
-  }, []);
+    }
+    getListVideo()
+      .then((listVideo) => {
+        listVideo.data.sort(() => 0.5 - Math.random());
+        setVideos([...videos, ...listVideo.data]);
+        setPage(listVideo.meta);
+      });
+  }
 
-  const { videoList } = UserAuth();
+  const handleRandomPage = (min, max) => {
+    const countPage = max - 1 + min;
+    const randomList = pageRandom.current;
+    let page;
+    if (randomList.length === countPage) {
+      page = randomList[randomList.length - 1];
+      return page;
+    }
+    do {
+      page = Math.floor(Math.random() * countPage + min);
+    } while (randomList.includes(page));
+
+    randomList.push(page);
+    return page;
+  }
+
   return (
     //className="h-screen overflow-scroll overflow-x-hidden snap-y snap-mandatory" (snap)
     /*focus để khi reload sẽ tự focus*/
     //<div id="focus" tabIndex="1">
-    <>
+    <div className={cx('wrapper')}>
       {videos.map((video, index) => (
         <VideoInfo key={index} data={video} />
       ))}
-      {videoList.map((url, index) => (
-        <div className={cx('container')} key={index}>
-          <UploadVideoInfo />
-          <UploadVideo data={url} />
-        </div>
-      ))}
-    </>
+      <InView onChange={(inView) => inView && handleGetPageRandom(handleRandomPage(1, page))}>
+        {videos.length === 0 ? <h1>Loading</h1> : <i className={cx("auto-load-more")}>
+          <TiktokLoading></TiktokLoading>
+        </i>}
+      </InView>
+    </div>
     //</div>
   );
 }

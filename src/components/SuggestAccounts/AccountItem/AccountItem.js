@@ -12,9 +12,11 @@ function AccountItem({ data, label }) {
     <AccountPreview data={data} label={label}>
       <div className={cx('account-item')}>
         <Image className={cx('account-avatar')} src={data.data.avatar} alt="user" fallBack={image.ayakaImage} />
-        <div className={cx('account-info')}>
-          <span className={cx('nickname')}>{data.data.nickname}</span>
-          {data.data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
+        <div className={cx('account-inner')}>
+          <div className={cx('account-info')}>
+            <span className={cx('nickname')}>{data.data.nickname}</span>
+            {data.data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
+          </div>
           <p className={cx('name')}>{data.data.name}</p>
         </div>
       </div>

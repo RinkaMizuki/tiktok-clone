@@ -3,29 +3,35 @@
   display: flex;
   column-gap: 12px;
   cursor: pointer;
+
   &:hover {
     background-color: rgba(22, 24, 35, 0.03);
   }
 }
+
 .avatar {
   width: 40px;
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
 }
+
 .name {
   font-size: 14px;
   font-weight: 600;
 }
+
 .username {
   color: rgba(51, 55, 73, 0.5);
   font-weight: 300;
   font-size: 13px;
 }
+
 .info {
   flex: 1;
   line-height: 22px;
 }
+
 .check {
   color: rgb(32, 213, 236);
   margin-left: 5px;

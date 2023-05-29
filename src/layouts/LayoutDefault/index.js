@@ -5,14 +5,12 @@ import SideBar from '~/layouts/components/SideBar';
 import PropTypes from 'prop-types';
 import Button from '~/components/Button/Button';
 import ScrollTop from './ScrollGoToTop';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { CancelIcon, PhoneIcon, TvIcon } from '~/components/Icons';
 
 const cx = classNames.bind(styles);
 
 function DefaultLayout({ children }) {
-
-  // const [show, setShow] = useState(false);
 
   const btnRef = useRef();
   const contentRef = useRef();

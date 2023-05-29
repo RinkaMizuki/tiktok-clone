@@ -1,13 +1,17 @@
 .account-item {
+  padding: 8px;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  padding: 6px;
+  position: relative;
   border-radius: 4px;
   transition: background-color 200ms ease-in-out 0s;
+
   &:hover {
     background-color: var(--light-grey-003);
   }
 }
+
 .account-avatar {
   height: 32px;
   width: 32px;
@@ -16,9 +20,16 @@
   margin-right: 12px;
 }
 
-.account-info {
+.account-inner {
+  flex-grow: 1;
+  height: 32px;
   cursor: pointer;
-  flex: 1;
+}
+
+.account-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   font-family: 'IBM Plex Sans';
 }
 
@@ -28,11 +39,12 @@
   font-size: 16px;
   line-height: 22px;
   margin-top: -2px;
-  max-width: 260px;
+  max-width: 145px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
+
 .check {
   height: 14px;
   width: 14px;

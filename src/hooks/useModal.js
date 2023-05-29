@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createPortal } from 'react-dom'
 const useModal = (Modal) => {
-    const [isShowing, setIsShowing] = useState(true);
+    const [isShowing, setIsShowing] = useState(false);
     const handleHideModalForm = () => {
         setIsShowing(false);
     }

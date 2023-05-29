@@ -23,7 +23,6 @@ function Button({
   iconLeftSignIn,
   toggle,
   refBtn,
-  key,
   ...passProps
 }) {
   let Cpn = 'button';
@@ -59,9 +58,8 @@ function Button({
     rounded,
     [className]: className,
   });
-
   return (
-    <Cpn className={classes} {...props} ref={refBtn} key={key}>
+    <Cpn className={classes} {...props} ref={refBtn}>
       {iconUpload && iconUpload}
       {iconLeftSignIn && <span className={cx('icon')}>{iconLeftSignIn}</span>}
       <span className={cx('title')}>{children}</span>
