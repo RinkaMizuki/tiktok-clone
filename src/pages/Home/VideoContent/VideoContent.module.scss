@@ -26,6 +26,7 @@
 }
 
 .video-container {
+  background-color: var(--light-grey-075);
   border-radius: 10px;
   margin-left: 67px;
   cursor: pointer;
@@ -100,7 +101,6 @@
   line-height: 17px;
   text-align: center;
 }
-
 
 //video css
 .play-icon,
@@ -240,7 +240,7 @@
 .position {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 55%;
   transform: translate(-50%, -50%);
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
