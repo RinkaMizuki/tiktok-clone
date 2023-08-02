@@ -1,7 +1,9 @@
+
+
 const configRoutes = {
   home: '/',
   following: '/follow',
-  profile: '/@:nickname',
+  profile: `/:nickname`,
   upload: '/upload',
   search: '/search',
   live: '/live',

@@ -7,10 +7,16 @@ import VideoContent from '../VideoContent';
 import { Wrapper as WrapperPopper } from '~/components/Popper';
 import Image from '~/components/Images';
 import Tippy from '@tippyjs/react/headless';
+import Follow from '~/components/Follow';
+import { useSelector } from 'react-redux';
+import { useContext } from 'react';
+import { ModuleContext } from '~/context/ModalContext';
 
 const cx = classNames.bind(styles);
 
 function VideoInfo({ data }) {
+  const { handleShowModalForm } = useContext(ModuleContext);
+  const isLogin = useSelector((state) => state.auth.login.isLogin);
   return (
     <div className={cx('content')}>
       <div className={cx('container')}>
@@ -21,11 +27,17 @@ function VideoInfo({ data }) {
             interactive
             placement="bottom"
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} >
+              <div tabIndex="-1" {...attrs}>
                 <WrapperPopper className={cx('wrapper')}>
                   <div className={cx('header')}>
                     <Image className={cx('preview-avatar')} src={data.user.avatar} alt="user" />
-                    <Button outline className={cx('preview-btn')}>Follow</Button>
+                    {!isLogin ? (
+                      <Button outline className={cx('preview-btn')} onClick={handleShowModalForm}>
+                        Follow
+                      </Button>
+                    ) : (
+                      <Follow userId={data.user_id} />
+                    )}
                   </div>
                   <div className={cx('body')}>
                     <span className={cx('preview-nickname')}>{data.user.nickname}</span>
@@ -60,9 +72,13 @@ function VideoInfo({ data }) {
           </div>
         </div>
         <div className={cx('btn-follow')}>
-          <Button outline small>
-            Follow
-          </Button>
+          {!isLogin ? (
+            <Button outline small onClick={handleShowModalForm}>
+              Follow
+            </Button>
+          ) : (
+            <Follow userId={data.user_id} isCurrStateFollow={data.user.is_followed} />
+          )}
         </div>
       </div>
       <VideoContent data={data} />

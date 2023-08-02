@@ -33,7 +33,6 @@ function Button({
     ...passProps,
   };
 
-
   if (to) {
     props.to = to;
     Cpn = Link;

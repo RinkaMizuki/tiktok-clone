@@ -1,5 +1,4 @@
 import classNames from 'classnames/bind';
-import image from '~/assets/images';
 import styles from './AccountItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -7,17 +6,19 @@ import AccountPreview from './AccountPreview';
 import Image from '~/components/Images';
 const cx = classNames.bind(styles);
 
-function AccountItem({ data, label }) {
+function AccountItem({ data, label, isFollowed }) {
   return (
-    <AccountPreview data={data} label={label}>
+    <AccountPreview data={data} label={label} isFollowed={isFollowed}>
       <div className={cx('account-item')}>
-        <Image className={cx('account-avatar')} src={data.data.avatar} alt="user" fallBack={image.ayakaImage} />
+        <Image className={cx('account-avatar')} src={data.avatar} alt="user" />
         <div className={cx('account-inner')}>
           <div className={cx('account-info')}>
-            <span className={cx('nickname')}>{data.data.nickname}</span>
-            {data.data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
+            <div className={cx('wrapper-check-name')}>
+              <span className={cx('nickname')}>{data.nickname}</span>
+              {data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
+            </div>
+            <span className={cx('full-name')}>{`${data.first_name} ${data.last_name}`}</span>
           </div>
-          <p className={cx('name')}>{data.data.name}</p>
         </div>
       </div>
     </AccountPreview>

@@ -10,6 +10,8 @@ import MenuItems from './MenuItems';
 import Header from './Header';
 import { useEffect, useState } from 'react';
 import { UserAuth } from '~/context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '~/redux/authSlice';
 
 const cx = classNames.bind(styles);
 
@@ -27,16 +29,27 @@ function Menu({ children, items, hideOnClick = false, onChange = () => {} }) {
     setHistory((prev) => prev.slice(0, history.length - 1));
   };
   //handle Logout User
-  const { logOut } = UserAuth();
+  const { logOut, user } = UserAuth();
+  const dispatch = useDispatch();
+  const currUser = useSelector((state) => state.auth.login.currentUser);
 
   const handleLogout = () => {
-    logOut();
+    if (user) {
+      logOut();
+    } else if (currUser) {
+      let expires = null;
+      let now = new Date();
+      now.setTime(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+      expires = 'expires=' + now.toUTCString();
+      document.cookie = 'token=' + document.cookie.split('=')[1] + ';' + expires;
+      dispatch(logout());
+      window.location.reload();
+    }
   };
 
   const renderItems = () => {
     return current.data.map((item, index) => {
       const isParent = !!item.children;
-
       return (
         <MenuItems
           key={index}

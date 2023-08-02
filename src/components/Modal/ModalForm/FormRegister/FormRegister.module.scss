@@ -63,7 +63,7 @@
     font-size: 1.6rem;
     position: absolute;
     right: 9px;
-    top: 13px;
+    top: 11px;
 }
 
 .forgot {
@@ -103,5 +103,18 @@
 
     &:hover {
         background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(254, 44, 85);
+    }
+}
+.loading {
+    color: #fff;
+    font-size: 1.6rem;
+    animation: spinner 2s infinite;
+}
+@keyframes spinner {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }

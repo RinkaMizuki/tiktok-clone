@@ -4,10 +4,29 @@
   height: calc(100vh - 60px);
   padding: 20px 0 26px 8px;
   position: fixed;
-  overflow-y: scroll;
+  overflow-y: overlay;
+  overscroll-behavior-y: contain;
+  overflow-x: hidden;
   top: 60px;
   bottom: 0;
   background-color: var(--white-sidebar);
+  transition: all .4s cubic-bezier(.65,0,.35,1);
+  &::-webkit-scrollbar {
+    width: 6px;
+    padding: 0 4px;
+    border-radius: 4px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: transparent;
+    transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background: var(--light-thumb-scrollbar);
+  }
 }
 
 .login-to-follow {
@@ -38,4 +57,5 @@
   margin-left: 0;
   margin-top: 20px;
   background-color: var(--white-btn-app);
+  transition: all .4s cubic-bezier(.65,0,.35,1);
 }

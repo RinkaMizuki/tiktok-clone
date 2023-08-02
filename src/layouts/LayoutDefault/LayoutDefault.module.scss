@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: var(--white-content);
+  transition: all .4s cubic-bezier(.65,0,.35,1);
 }
 
 .container {
@@ -12,10 +14,10 @@
 }
 
 .content {
-  background-color: var(--white-content);
   width: 100%;
   height: calc(100vh - 60px);
   overflow-y: scroll;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;

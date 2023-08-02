@@ -20,8 +20,10 @@ function UploadVideo({ data }) {
   useEffect(() => {
     if (isVisible) {
       if (!playing) {
-        videoRef.current.play();
-        setPlaying(true);
+        setTimeout(() => {
+          videoRef.current.play();
+          setPlaying(true);
+        }, 150);
       }
     } else {
       if (playing) {

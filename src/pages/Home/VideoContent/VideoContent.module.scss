@@ -36,7 +36,11 @@
   position: relative;
   height: 100%;
   width: 100%;
-
+  &:hover {
+    & .custom-icon {
+      opacity: 1;
+    }
+  }
   &.horizontal {
     height: 300px;
     width: 530px;
@@ -56,6 +60,9 @@
   top: 0;
   width: 100%;
   z-index: 0;
+}
+.active {
+  z-index: -1;
 }
 
 .btn-like,
@@ -94,67 +101,154 @@
   text-align: center;
 }
 
-//tippy
-.tippy-container {
-  position: absolute;
-  z-index: 1;
-  border-radius: 8px;
-  bottom: calc(100% + 2px);
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;
-  transition: opacity 300ms ease 0s;
-  opacity: 1;
-  transform: translateY(8px);
-  background-color: var(--light-bg-preview);
-  padding-right: 4px;
-  left: -50px;
 
-  &::before {
-    background-color: var(--light-bg-preview);
-    bottom: -17px;
-    left: 50px;
-    content: "";
-    height: 15px;
-    position: absolute;
-    transform: translateX(-50%) translateY(-67%) rotate(45deg);
-    width: 15px;
+//video css
+.play-icon,
+.pause-icon {
+  padding: 10px;
+  left: 12px;
+  bottom: 26px;
+  & .custom-icon {
+    width: 20px;
+    height: 20px;
   }
 }
 
-.hide {
-  opacity: 0;
+.volume-icon {
+  bottom: 26px;
+  left: unset;
+  right: 12px;
+  &:hover {
+    > .volume-control {
+      opacity: 1;
+    }
+  }
 }
-
-.share-wrapper {
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 22px;
-  width: 280px;
-  padding: 8px 0px;
-  max-height: 448px;
-  overflow: auto;
-}
-
-.item-wrapper {
+.volume-control {
+  position: absolute;
   display: flex;
   align-items: center;
-  padding: 11px 16px;
-  margin: 0px 3px 0px 4px;
+  justify-content: center;
+  bottom: 68px;
+  right: -13px;
+  width: 70px;
+  height: 25px;
+  padding: 5px 0;
+  border-radius: 20px;
+  background-color: #16182357;
+  transform: rotate(-90deg);
+  cursor: default;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.volume-bar {
   position: relative;
-
-  &.item-caret-down {
-    padding: 0 16px;
-    justify-content: center;
-  }
-
-  &:hover {
-    background-color: var(--light-grey-003);
-  }
+  width: 46px;
+  height: 2px;
+  border-radius: 5px;
+  background-color: #ffffff57;
+}
+.input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  z-index: 2;
+  left: 0px;
+  top: 0px;
+  cursor: pointer;
+}
+.selector {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 4px;
+  background-color: #fff;
+}
+.custom-icon {
+  opacity: 0;
+  width: 23px;
+  height: 23px;
+  color: rgba(255, 255, 255, 1);
+  transition: opacity 0.3s ease;
 }
 
-.hide-caret {
-  display: none;
+.showing {
+  opacity: 1 !important;
 }
 
-.item-text {
-  margin-left: 12px;
+.animation {
+  position: absolute;
+  text-align: center;
+}
+
+.time-duration-container {
+  width: 100%;
+  height: 16px;
+  padding-inline: 12px;
+  position: absolute;
+  opacity: 1;
+  transition: opacity 0.3s ease 0s;
+  bottom: 12px;
+  cursor: initial;
+  display: flex;
+}
+.time-duration {
+  width: 100%;
+  height: 16px;
+  flex: 1 1 auto;
+  position: relative;
+}
+.time-duration-bar {
+  height: 2px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.34);
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.time-duration-track {
+  height: 2px;
+  width: 0px;
+  transform: translateY(-50%);
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  top: 50%;
+  cursor: pointer;
+  transform-origin: left center;
+}
+.display-timer {
+  flex: 0 0 64px;
+  max-width: 64px;
+  margin-inline-start: 8px;
+  font-size: 10px;
+  line-height: 15px;
+  color: rgb(255, 255, 255);
+  text-align: end;
+  white-space: nowrap;
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
+  font-family: Tahoma, PingFangSC, sans-serif;
+}
+.position {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input[type='range']::-webkit-slider-thumb {
+    width: 13px;
+    -webkit-appearance: none;
+    height: 13px;
+    border-radius: 50%;
+    background: #ffffff;
+  }
 }

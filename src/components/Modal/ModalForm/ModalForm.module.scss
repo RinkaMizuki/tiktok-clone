@@ -1,136 +1,164 @@
 .modal-mask {
-    align-items: center;
-    background: rgba(0, 0, 0, .5);
-    display: flex;
-    inset: 0;
-    justify-content: center;
-    position: fixed;
-    z-index: 99999;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 99999;
 }
 
 .wrapper {
-    background-color: var(--light-bg-preview);
-    border-radius: 8px;
-    height: 80%;
-    margin: auto;
-    max-height: 693px;
-    overflow: hidden;
-    position: relative;
-    transform: none;
+  background-color: var(--light-bg-preview);
+  border-radius: 8px;
+  height: 80%;
+  margin: auto;
+  max-height: 693px;
+  overflow: hidden;
+  position: relative;
+  transform: none;
+}
+.notify-success {
+  align-items: center;
+  background-color: #383737;
+  border-radius: 4px;
+  color: #fff;
+  display: flex;
+  font-size: 1.6rem;
+  font-weight: 700;
+  height: 40px;
+  justify-content: center;
+  margin: auto;
+  opacity: 0;
+  position: fixed;
+  top: 10px;
+  width: 700px;
+}
+
+.show {
+  animation: fadeOut 5s;
 }
 
 .animationShow {
-    animation: showFormLogin .3s cubic-bezier(.075, .82, .165, 1) 0s;
+  animation: showFormLogin 0.3s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
 }
 
 .animationHide {
-    animation: hiddenFormLogin .3s cubic-bezier(.075, .82, .165, 1) 0s;
+  animation: hiddenFormLogin 0.3s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 48px 0 0;
-    width: 483px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 48px 0 0;
+  width: 483px;
 }
 
-
 .close-btn {
-    align-items: center;
-    background-color: var(--light-grey-003);
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    height: 40px;
-    justify-content: center;
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    width: 40px;
-    z-index: 1;
+  align-items: center;
+  background-color: var(--light-grey-003);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  width: 40px;
+  z-index: 1;
 }
 
 .cancel-icon {
-    width: 2.6rem;
-    height: 2.6rem;
-    color: var(--light-btn-chat-notice);
+  width: 2.6rem;
+  height: 2.6rem;
+  color: var(--light-btn-chat-notice);
 }
 
 .agreement {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--white-content);
-    border-bottom: 1px solid var(--light-grey-003);
-    padding: 16px 30px;
-    margin-bottom: unset;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white-content);
+  border-bottom: 1px solid var(--light-grey-003);
+  padding: 16px 30px;
+  margin-bottom: unset;
 }
 
 .atext {
-    color: var(--light-grey-05);
-    font-family: 'ProximaNova', sans-serif;
-    font-size: 12px;
-    line-height: 15px;
-    width: 375px;
-    text-align: center;
+  color: var(--light-grey-05);
+  font-family: 'ProximaNova', sans-serif;
+  font-size: 12px;
+  line-height: 15px;
+  width: 375px;
+  text-align: center;
 
-    & .alink:hover {
-        text-decoration: underline;
-    }
+  & .alink:hover {
+    text-decoration: underline;
+  }
 }
 
 .footer {
-    align-items: center;
-    border-top: 1px solid var(--light-bg-search);
-    display: flex;
-    font-size: 15px;
-    font-weight: 400;
-    height: 64px;
-    justify-content: center;
-    line-height: 18px;
-    width: 100%;
+  align-items: center;
+  border-top: 1px solid var(--light-bg-search);
+  display: flex;
+  font-size: 15px;
+  font-weight: 400;
+  height: 64px;
+  justify-content: center;
+  line-height: 18px;
+  width: 100%;
 }
 
 .notify {
-    color: var(--light-btn-chat-notice);
-    display: flex;
+  color: var(--light-btn-chat-notice);
+  display: flex;
 
-    & p {
-        color: var(--primary);
-        font-weight: 600;
-        margin-left: 5px;
-        position: relative;
-        z-index: 10;
+  & p {
+    color: var(--primary);
+    font-weight: 600;
+    margin-left: 5px;
+    position: relative;
+    z-index: 10;
 
-        &:hover {
-            cursor: pointer;
-            text-decoration: underline;
-        }
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
     }
+  }
 }
 
 @keyframes showFormLogin {
-    0% {
-        opacity: 0;
-        transform: scale(0);
-    }
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
 
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes hiddenFormLogin {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
 
-    100% {
-        opacity: 0.2;
-        transform: scale(0.1);
-    }
+  100% {
+    opacity: 0.2;
+    transform: scale(0.1);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

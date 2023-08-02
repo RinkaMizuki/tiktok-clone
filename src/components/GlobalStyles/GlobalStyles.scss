@@ -1,5 +1,128 @@
 @import 'normalize.css';
-
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
 :root {
   //color/lightmode
   --nav-logo: url('../../assets/images/logo.svg');
@@ -32,6 +155,15 @@
   --light-bg-search: rgba(22, 24, 35, 0.06);
   --light-placeholder: rgba(22, 24, 35, 0.664);
   --light-line-search: rgba(22, 24, 35, 0.12);
+  --light-bg-following: rgba(245, 245, 245, 1);
+  --light-bd-following: rgba(22, 24, 35, 0.2);
+  --light-thumb-scrollbar: rgba(0, 0, 0, 0.05);
+  --light-feedtab-profile: rgb(115, 116, 123);
+  --light-bg-line: rgba(0, 0, 0, 0.12);
+  --light-bg-drop: rgba(0, 0, 0, 0.5);
+  --light-hover-bg-btn-profile: rgb(248, 248, 248);
+  --light-disable-btn: rgb(230, 230, 234);
+  --light-disable-text: rgb(138 139 145);
   //color/darkmode
   --dark-grey-09: rgba(255, 255, 255, 0.9);
   --dark-grey-075: rgba(255, 255, 255, 0.75);
@@ -48,6 +180,13 @@
   --dark-btn-follow-hover: rgb(32 20 22);
   --dark-btn-follow-preview-hover: rgba(254, 44, 85, 0.06);
   --dark-shadow-header: rgb(255 255 255 / 12%);
+  --dark-bg-following: rgba(46, 46, 46, 1);
+  --dark-bd-following: rgba(255, 255, 255, 0.217);
+  --dark-thumb-scrollbar: rgba(255, 255, 255, 0.08);
+  --dark-feedtab-profile: rgba(255, 255, 255, 0.5);
+  --dark-bg-line: rgba(255, 255, 255, 0.12);
+  --dark-bg-drop: rgba(0, 0, 0, 0.68);
+  --dark-disable-btn: var(--dark-black-37);
   //size
   --default-layout-header-height: 60px;
   // --default-layout-width: 1150px;
@@ -58,7 +197,7 @@
 
 [data-theme='dark'] {
   --transparent: none;
-  --nav-logo: url("../../assets/images/logo-light.svg");
+  --nav-logo: url('../../assets/images/logo-light.svg');
   --light-bg-preview: var(--dark-black-37);
   --light-preview-account: var(--dark-black-27);
   --light-shadow-header: var(--dark-shadow-header);
@@ -84,7 +223,14 @@
   --light-grey-034: var(--dark-grey-034);
   --light-grey-064: var(--dark-grey-075);
   --light-grey: var(--dark-grey-09);
-
+  --light-bg-following: var(--dark-bg-following);
+  --light-bd-following: var(--dark-bd-following);
+  --light-thumb-scrollbar: var(--dark-thumb-scrollbar);
+  --light-feedtab-profile: var(--dark-feedtab-profile);
+  --light-bg-line: var(--dark-bg-line);
+  --light-bg-drop: var(--dark-bg-drop);
+  --light-hover-bg-btn-profile: var(--dark-black-18);
+  --light-disable-btn: var(--dark-disable-btn);
   a[href] {
     color: var(--white);
   }
@@ -99,18 +245,33 @@
 
 html {
   font-size: 62.5%;
-  overflow: scroll;
-  overflow-x: hidden;
+  // overflow: auto;
+  // overflow-x: hidden;
 }
 
 html *::-webkit-scrollbar {
-  // border-radius: 0;
-  // width: 8px;
-  width: 0;
-  /* Remove scrollbar space */
-  background: transparent;
-  /* Optional: just make scrollbar invisible */
+  border-radius: 0;
+  width: 8px;
 }
+
+html *::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: var(--light-thumb-scrollbar);
+}
+
+html *::-webkit-scrollbar-track {
+  border-radius: 0;
+  background-color: #00000000;
+}
+
+// html *::-webkit-scrollbar {
+//   // border-radius: 0;
+//   // width: 8px;
+//   width: 0;
+//   /* Remove scrollbar space */
+//   background: transparent;
+//   /* Optional: just make scrollbar invisible */
+// }
 
 // html *::-webkit-scrollbar-thumb {
 //   border-radius: 4px;
@@ -124,6 +285,7 @@ html *::-webkit-scrollbar {
 
 body {
   overflow-y: hidden;
+  overflow-x: hidden;
   font-family: var(--font-family);
   line-height: 1.5;
   text-rendering: optimizeSpeed;
@@ -178,6 +340,27 @@ body {
   font-weight: 700;
 }
 
+@font-face {
+  font-family: TikTokFont;
+  src: url('/assets/fonts/TikTokFont-Bold.woff2');
+  font-weight: 700;
+}
+@font-face {
+  font-family: TikTokFont;
+  src: url('/assets/fonts/TikTokFont-Regular.woff2');
+  font-weight: 400;
+}
+@font-face {
+  font-family: TikTokFont;
+  src: url('/assets/fonts/TikTokFont-Semibold.woff2');
+  font-weight: 600;
+}
+@font-face {
+  font-family: TikTokDisplayFont;
+  src: url('/assets/fonts/TikTokDisplayFont-Bold.woff2');
+  font-weight: 700;
+}
+
 a[href] {
   text-decoration: none;
   color: var(--black);
@@ -201,9 +384,13 @@ button,
   outline-style: none;
   border: none;
 }
+input[type=file], /* FF, IE7+, chrome (except button) */
+input[type=file]::-webkit-file-upload-button {
+  /* chromes and blink button */
+  cursor: pointer;
+}
 
 //custom tooltip
-
 
 body .tippy-box {
   border-radius: 8px;
@@ -214,7 +401,7 @@ body .tippy-box {
   background-color: rgba(84, 84, 84, 0.92);
 }
 
-body .tippy-box[data-placement^='bottom']>.tippy-arrow:before {
+body .tippy-box[data-placement^='bottom'] > .tippy-arrow:before {
   border-bottom-color: rgba(84, 84, 84, 0.92);
   top: -8px;
 }

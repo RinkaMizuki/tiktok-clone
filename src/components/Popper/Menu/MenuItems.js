@@ -3,10 +3,10 @@ import styles from './Menu.module.scss';
 import Button from '~/components/Button';
 import Toggle from './ToggleIcon/Toggle';
 import PropTypes from 'prop-types';
-
 const cx = classNames.bind(styles);
 
 function MenuItems({ data, onClick }) {
+  
   return (
     <Button
       toggle={data.toggle && <Toggle />}

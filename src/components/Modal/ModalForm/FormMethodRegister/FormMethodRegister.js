@@ -4,6 +4,8 @@ import { CaretDownSmall, Facebook, Google, KaKaoTalk, Line, Twitter, User } from
 import React, { useState } from 'react';
 import Button from '../../../Button';
 import { UserAuth } from '~/context/AuthContext';
+import { useDispatch } from 'react-redux';
+import { resetLogin } from '~/redux/authSlice';
 
 const cx = classNames.bind(styles);
 
@@ -34,10 +36,13 @@ const listMediaSocial = [
     },
 ]
 
-function ModalFormMethodRegister({ onClick }) {
+function FormMethodRegister({ onStateChangeFormRegister }) {
 
     const [isLoad, setIsLoad] = useState(false);
     const { googleSignIn } = UserAuth();
+    
+    const dispatch = useDispatch();
+
     const handleGoogleSignIn = async () => {
         try {
             await googleSignIn();
@@ -49,6 +54,11 @@ function ModalFormMethodRegister({ onClick }) {
 
     const handleShowMoreMethod = () => {
         setIsLoad(true);
+    }
+
+    const handleChooseMethodSign = () => {
+        dispatch(resetLogin());
+        onStateChangeFormRegister(true);
     }
 
     const loadMethodRegister = isLoad ? listMediaSocial.length : 3;
@@ -74,7 +84,7 @@ function ModalFormMethodRegister({ onClick }) {
                         </React.Fragment>
                     } else if (index === 0) {
                         return <React.Fragment key={index}>
-                            <Button text className={cx('btn-form-login')} onClick={onClick}>
+                            <Button text className={cx('btn-form-login')} onClick={handleChooseMethodSign}>
                                 <div className={cx('wrapper-icon')}>
                                     <span className={cx('icon')}>{media.icon}</span>
                                     <span>{media.desc}</span>
@@ -96,4 +106,4 @@ function ModalFormMethodRegister({ onClick }) {
     )
 }
 
-export default ModalFormMethodRegister;
+export default FormMethodRegister;

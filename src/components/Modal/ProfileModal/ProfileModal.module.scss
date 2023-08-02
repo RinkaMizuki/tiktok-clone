@@ -1,0 +1,285 @@
+.modal-profile-container {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0px;
+  overflow: auto;
+  z-index: 99999;
+  color: var(--light-info-user);
+  font-family: TikTokFont, sans-serif;
+}
+.modal-backdrop {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0px;
+  background: var(--light-bg-drop);
+  z-index: 99998;
+}
+.modal-content-vertical {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  max-height: 100vh;
+  overflow: visible;
+}
+.modal-content-vertical-padding {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 16px;
+  max-width: 100vw;
+}
+
+.modal-content-section {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  position: relative;
+  outline: 0px;
+  max-width: calc(100vw - 32px);
+  background: var(--white-sidebar);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  width: auto;
+}
+.modal-container {
+  height: 700px;
+}
+.edit-profile-header {
+  padding: 24px 24px 12px;
+  line-height: 36px;
+  border-bottom: 0.5px solid var(--light-bd-following);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  > .label {
+    font-size: 24px;
+    white-space: nowrap;
+  }
+}
+.close-container {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin-right: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > .custom-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--light-grey-075);
+  }
+}
+.container-content {
+  width: 700px;
+  padding: 8px 24px 0px;
+}
+.item-container,
+.username-container,
+.name-container,
+.bio-container {
+  padding: 16px 0px;
+  display: flex;
+  border-bottom: 0.5px solid var(--light-line-search);
+}
+.bio-container {
+  border-bottom: none;
+}
+.edit-photo {
+  position: relative;
+  margin-left: 128px;
+  & > .wrapper-avatar {
+    width: 96px;
+    height: 96px;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-feature-settings: 'tnum';
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 32px;
+    border-radius: 50%;
+    background-color: rgba(136, 136, 136, 0.5);
+    border-color: rgba(255, 255, 255, 0.12);
+    border-width: 0.5px;
+    cursor: pointer;
+  }
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.edit-wrapper {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+  & > .edit-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    background: var(--light-bg-following);
+    border: 1px solid rgb(208, 208, 211);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.input-upload {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  opacity: 0;
+  display: inline-block !important;
+}
+
+.label {
+  font-weight: 600;
+  line-height: 24px;
+  font-size: 16px;
+  width: 120px;
+  margin-right: 24px;
+}
+.edit-area-container {
+  position: relative;
+}
+.input-text,
+.input-textarea {
+  width: 360px;
+  height: 38px;
+  border-radius: 4px;
+  background: var(--light-bg-search);
+  caret-color: var(--primary);
+  font-size: 16px;
+  color: var(--light-grey);
+  line-height: 24px;
+  outline: none;
+  border: none;
+  padding: 7px 12px;
+  box-sizing: border-box;
+}
+.input-textarea {
+  height: 100px;
+  padding: 12px;
+  resize: none;
+}
+.username-url,
+.username-desc,
+.name-desc {
+  font-size: 12px;
+  color: var(--light-grey-075);
+  line-height: 18px;
+  margin-top: 16px;
+  max-width: 460px;
+  overflow: hidden;
+}
+.username-desc,
+.name-desc {
+  width: 360px;
+  margin-top: 8px;
+}
+.text-count {
+  color: var(--light-grey-075);
+  font-size: 12px;
+  line-height: 18px;
+}
+.footer-container {
+  height: 86px;
+  display: flex;
+  padding: 0px 24px;
+  justify-content: flex-end;
+  border-top: 0.5px solid var(--light-bd-following);
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+}
+
+.custom-btn {
+  font-family: TikTokFont, sans-serif;
+  font-size: 14px;
+  min-width: 96px;
+  height: 36px;
+  border-color: var(--light-line-search);
+  background-color: var(--white-btn-follow-preview);
+  font-weight: 600;
+  color: var(--light-grey) !important;
+  &:hover {
+    border-color: rgb(208, 209, 211);
+    background-color: var(--light-hover-bg-btn-profile);
+  }
+}
+
+.custom-disable {
+  color: var(--light-disable-text) !important;
+  background-color: var(--light-disable-btn);
+}
+
+.animationShow {
+  animation: showModalProfile 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.animationHide {
+  animation: hiddenModalProfile 0.3s linear;
+}
+.animationShowBackdrop {
+  animation: showBackDrop 0.25s linear;
+}
+
+.animationHideBackdrop {
+  animation: hideBackDrop 0.3s linear;
+}
+
+@keyframes showBackDrop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hideBackDrop {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes showModalProfile {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes hiddenModalProfile {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+}

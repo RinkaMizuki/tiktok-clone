@@ -7,12 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { UserAuth } from '~/context/AuthContext';
 import Image from '~/components/Images/Images';
+import Follow from '~/components/Follow/Follow';
 
 const cx = classNames.bind(styles);
 
-function AccountPreview({ data, children, label }) {
+function AccountPreview({ data, children, label, isFollowed }) {
   const { user } = UserAuth();
-
   return (
     <>
       {user && label === 'Following accounts' ? (
@@ -29,17 +29,21 @@ function AccountPreview({ data, children, label }) {
             <div tabIndex="-1" {...attrs}>
               <WrapperPopper className={cx('wrapper')}>
                 <div className={cx('header')}>
-                  <Image className={cx('preview-avatar')} src={data.data.avatar} alt="user" />
-                  <Button primary>Follow</Button>
+                  <Image className={cx('preview-avatar')} src={data.avatar} alt="user" />
+                  {!isFollowed ? (
+                    <Button primary>Follow</Button>
+                  ) : (
+                    <Follow isCurrStateFollow={isFollowed} userId={data.id} />
+                  )}
                 </div>
                 <div className={cx('body')}>
-                  <span className={cx('nickname')}>{data.data.nickname}</span>
-                  {data.data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
-                  <p className={cx('name')}>{data.data.name}</p>
+                  <span className={cx('nickname')}>{data.nickname}</span>
+                  {data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
+                  <p className={cx('name')}>{data.name}</p>
                   <p className={cx('footer')}>
-                    <span>{`${data.data.follow}M`}</span>
+                    <span>{`${data.followers_count}`}</span>
                     <span>Follower</span>
-                    <span>{`${data.data.like}M`}</span>
+                    <span>{`${data.likes_count}`}</span>
                     <span>Likes</span>
                   </p>
                 </div>

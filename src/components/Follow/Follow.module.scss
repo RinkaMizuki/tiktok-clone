@@ -1,0 +1,14 @@
+.Follow {
+  border: 1px solid var(--primary);
+  background-color: var(--white-content);
+  color: var(--primary) !important;
+}
+.Following {
+  color: var(--light-btn-chat-notice) !important;
+  background-color: var(--white-btn-hover);
+  border: 1px solid var(--light-line-search);
+  &:hover {
+    background-color: var(--light-bg-following);
+    border-color: var(--light-bd-following);
+  }
+}

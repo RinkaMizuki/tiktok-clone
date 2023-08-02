@@ -75,3 +75,13 @@
   line-height: 20px;
   display: inline-block;
 }
+
+.isFollowed {
+  color: var(--light-btn-chat-notice) !important;
+  background-color: var(--white-btn-hover);
+  border: 1px solid var(--light-line-search);
+  &:hover {
+    background-color: var(--light-bg-following);
+    border-color :var(--light-bd-following);
+  }
+}

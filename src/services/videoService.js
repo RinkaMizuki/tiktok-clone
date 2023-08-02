@@ -13,6 +13,6 @@ export const videoService = async (randomPage, type = 'for-you') => {
             meta: res.meta.pagination.total_pages,
         };
     } catch (err) {
-        console.log(err);
+        return err;
     }
 }

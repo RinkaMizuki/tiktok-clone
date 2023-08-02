@@ -27,14 +27,15 @@
 }
 
 .account-info {
+  position: relative;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
   font-family: 'IBM Plex Sans';
 }
 
 .nickname {
   color: var(--light-grey);
+  position: relative;
   font-weight: 700;
   font-size: 16px;
   line-height: 22px;
@@ -46,14 +47,16 @@
 }
 
 .check {
-  height: 14px;
-  width: 14px;
-  margin-left: 4px;
-  margin-bottom: 2px;
   color: rgb(32, 213, 236);
+  width: 14px;
+  height: 14px;
+  margin-left: 2px;
 }
-
-.name {
+.wrapper-check-name {
+  display: flex;
+  align-self: start;
+}
+.full-name {
   color: var(--light-grey-075);
   font-weight: 400;
   font-size: 12px;

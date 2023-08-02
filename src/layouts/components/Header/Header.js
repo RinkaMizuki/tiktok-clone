@@ -26,7 +26,9 @@ import { Link } from 'react-router-dom';
 import config from '~/config';
 import { useContext } from 'react';
 import { ModuleContext } from '~/context/ModalContext';
-
+import { useLocalStorage } from '~/hooks';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 const cx = classNames.bind(styles);
 //config menu items
 const MENU_ITEMS = [
@@ -121,10 +123,12 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
+  const nickname = useSelector((state) => state.auth.login?.currentUser?.nickname);
   const MENU_USERS = [
     {
       icon: <FontAwesomeIcon icon={faUser} />,
       title: 'View profiles',
+      to: `/@${nickname}`,
     },
     {
       icon: <FontAwesomeIcon icon={faCoins} />,
@@ -152,15 +156,23 @@ function Header() {
   };
   //set state
   const { user } = UserAuth();
-
+  const { getLocalStorage } = useLocalStorage();
   const { handleShowModalForm } = useContext(ModuleContext);
+  const navigate = useNavigate();
 
+  const { auth } = getLocalStorage('persist:root');
+  const data = auth && JSON.parse(auth);
   const props = {};
-  if (user) {
+  if (user || data?.login?.isLogin) {
     props.to = '/upload';
-  } else {
-
   }
+  const handleUpload = () => {
+    if (user || data?.login?.isLogin) {
+      navigate('/upload');
+    } else {
+      handleShowModalForm();
+    }
+  };
 
   return (
     <header className={cx('wrapper')}>
@@ -172,11 +184,11 @@ function Header() {
         {/*Tippy search*/}
         <Search />
 
-        <div className={cx('action', user && 'gap')}>
-          <Button {...props} text iconUpload={<Icons.UploadIcon />} onClick={handleShowModalForm}>
+        <div className={cx('action', user || (data?.login?.isLogin && 'gap'))}>
+          <Button {...props} text iconUpload={<Icons.UploadIcon />} onClick={handleUpload}>
             Upload
           </Button>
-          {user ? (
+          {user || data?.login?.isLogin ? (
             <>
               <Tippy zIndex={99999} content="Messages" delay={[0, 100]} animation="scale">
                 <button className={cx('user-btn')}>
@@ -198,9 +210,13 @@ function Header() {
               {/*Tippy more items*/}
             </>
           )}
-          {user ? (
+          {user || data?.login?.isLogin ? (
             <Menu items={MENU_USERS} onChange={handleChange}>
-              <Image className={cx('user-avatar')} src={user?.photoURL} alt={user?.displayName} />
+              <Image
+                className={cx('user-avatar')}
+                src={user?.photoURL || data?.login?.currentUser?.avatar}
+                alt={user?.displayName}
+              />
             </Menu>
           ) : (
             <Menu items={MENU_ITEMS} onChange={handleChange}>
