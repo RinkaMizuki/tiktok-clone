@@ -13,6 +13,7 @@ import Image from '~/components/Images/Images';
 import ProfileLoading from '~/components/Loadings/ProfileLoading';
 import { useSelector } from 'react-redux';
 import Follow from '~/components/Follow';
+import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 const active = cx('active');
 const Profile = () => {
@@ -20,13 +21,14 @@ const Profile = () => {
   const [currentUser, setCurrentUser] = useState({});
   const [urlList, setUrlList] = useState([]);
   const { pathname } = useLocation();
-  const { handleShowModelProfile } = useContext(ModuleContext);
+  const { handleShowModalForm, handleShowModelProfile } = useContext(ModuleContext);
   const lineRef = useRef(null);
   const postRef = useRef(null);
   const favoritesRef = useRef(null);
   const likedRef = useRef(null);
 
-  const userId = useSelector((state) => state.auth.login.currentUser.id);
+  const userId = useSelector((state) => state.auth.login?.currentUser?.id);
+  const isLogin = useSelector((state) => state.auth.login.isLogin);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -133,12 +135,14 @@ const Profile = () => {
                     <FontAwesomeIcon icon={faPenToSquare} />
                     <p className={cx('edit-profile')}>Edit profile</p>
                   </div>
-                ) : (
+                ) : isLogin ? (
                   <Follow
                     userId={currentUser.id}
                     isCurrStateFollow={currentUser.is_followed}
                     className={cx('custom-btn')}
                   />
+                ) : (
+                  <Button className={cx("custom-btn")} primary onClick={handleShowModalForm}>Follow</Button>
                 )}
               </div>
             </div>
