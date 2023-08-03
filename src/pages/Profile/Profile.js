@@ -11,6 +11,8 @@ import { getCurrentProfileUser } from '~/services/userService';
 import { useLocation } from 'react-router-dom';
 import Image from '~/components/Images/Images';
 import ProfileLoading from '~/components/Loadings/ProfileLoading';
+import { useSelector } from 'react-redux';
+import Follow from '~/components/Follow';
 const cx = classNames.bind(styles);
 const active = cx('active');
 const Profile = () => {
@@ -23,6 +25,8 @@ const Profile = () => {
   const postRef = useRef(null);
   const favoritesRef = useRef(null);
   const likedRef = useRef(null);
+
+  const userId = useSelector((state) => state.auth.login.currentUser.id);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -119,15 +123,23 @@ const Profile = () => {
           <div className={cx('info-user')}>
             <div className={cx('wrapper-info')}>
               <div className={cx('avatar')}>
-                <Image src={currentUser?.avatar} alt={currentUser?.nickname} className={cx('custom-img')}/>
+                <Image src={currentUser?.avatar} alt={currentUser?.nickname} className={cx('custom-img')} />
               </div>
               <div className={cx('name-container')}>
                 <h1 className={cx('username')}>{currentUser.nickname}</h1>
                 <h1 className={cx('nickname')}>{`${currentUser.last_name} ${currentUser.first_name}`}</h1>
-                <div className={cx('edit-container')} onClick={handleShowModelProfile}>
-                  <FontAwesomeIcon icon={faPenToSquare} />
-                  <p className={cx('edit-profile')}>Edit profile</p>
-                </div>
+                {userId === currentUser.id ? (
+                  <div className={cx('edit-container')} onClick={handleShowModelProfile}>
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                    <p className={cx('edit-profile')}>Edit profile</p>
+                  </div>
+                ) : (
+                  <Follow
+                    userId={currentUser.id}
+                    isCurrStateFollow={currentUser.is_followed}
+                    className={cx('custom-btn')}
+                  />
+                )}
               </div>
             </div>
             <div className={cx('fame-container')}>

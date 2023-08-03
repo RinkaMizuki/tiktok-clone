@@ -1,6 +1,5 @@
 .wrapper {
   display: flex;
-  padding-top: 10px;
   position: relative;
 }
 .avatar {
@@ -42,7 +41,7 @@
 .info {
   position: absolute;
   left: 0;
-  bottom: -60px;
+  bottom: -65px;
 }
 
 @keyframes LineLoading_loading {

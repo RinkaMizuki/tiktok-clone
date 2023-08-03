@@ -2,18 +2,32 @@ import classNames from 'classnames/bind';
 import styles from './ProfileModal.module.scss';
 import { CancelIcon, EditPhoto } from '~/components/Icons';
 import Button from '~/components/Button/Button';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateProfile } from '~/redux/apiRequests';
+import Image from '~/components/Images/Images';
+import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
 const ProfileModal = ({ onHideModal, isShowing }) => {
+  const currUser = useSelector((state) => state.auth.login.currentUser);
+
+  const [file, setFile] = useState(null);
+  const [selectedAvatar, setSelectedAvatar] = useState(currUser.avatar);
   const [isClosed, setIsClosed] = useState(false);
   const [areaInputBio, setAreaInputBio] = useState('');
   const [inputUsername, setInputUserName] = useState('');
   const [inputName, setInputname] = useState('');
-  const currUser = useSelector((state) => state.auth.login.currentUser);
-  console.log(currUser);
+  const [isInputText, setIsInputText] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  const inputUsernameRef = useRef(null);
+  const saveRef = useRef(null);
+  const inputFileRef = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleCloseModal = () => {
     setIsClosed(!isClosed);
     setTimeout(() => {
@@ -21,14 +35,47 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
     }, 290);
   };
 
+  // useEffect(() => {
+  //   // const updateProfileUser = async () => {
+  //   //   await updateProfile();
+  //   // };
+  //   // updateProfileUser();
+
+  // }, [selectedAvatar]);
+
   const handleChangeInputUsername = (e) => {
     setInputUserName(e.target.value);
+    e.target.value && setIsInputText(true);
   };
   const handleChangeInputName = (e) => {
     setInputname(e.target.value);
   };
   const handleChangeAreaInputBio = (e) => {
     setAreaInputBio(e.target.value);
+  };
+
+  const handleSelectedAvatar = () => {
+    if (!inputFileRef.current.files || !inputFileRef.current.files.length) {
+      // setSelectedAvatar(currUser.avatar);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(inputFileRef.current.files[0]);
+    setSelectedAvatar(objectUrl);
+    setFile(inputFileRef.current.files[0]);
+    setIsDisabled(false);
+  };
+  const handleClickChangeInput = () => {
+    inputFileRef.current.click();
+  };
+
+  const handleSaveProfile = async () => {
+    const formData = new FormData();
+    setIsDisabled(true);
+    if (file) {
+      formData.append('avatar', file);
+      await updateProfile(formData, dispatch, navigate);
+    }
+    window.location.reload();
   };
   return (
     <>
@@ -58,14 +105,20 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
                   <div className={cx('item-container')}>
                     <div className={cx('label')}>Profile photo</div>
                     <div className={cx('edit-photo')}>
-                      <div className={cx('wrapper-avatar')}>
-                        <img src={currUser.avatar} alt="avatar" />
+                      <div className={cx('wrapper-avatar')} onClick={handleClickChangeInput}>
+                        <Image src={selectedAvatar.toString()} alt="avatar" />
                       </div>
-                      <div className={cx('edit-wrapper')}>
+                      <div className={cx('edit-wrapper')} onClick={handleClickChangeInput}>
                         <div className={cx('edit-icon')}>
                           <EditPhoto />
                         </div>
-                        <input type="file" accept=".jpg,.jpeg,.png,.tiff,.heic,.webp" className={cx('input-upload')} />
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.tiff,.heic,.webp"
+                          className={cx('input-upload')}
+                          onChange={handleSelectedAvatar}
+                          ref={inputFileRef}
+                        />
                       </div>
                     </div>
                   </div>
@@ -73,13 +126,15 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
                     <div className={cx('label')}>Username</div>
                     <div className={cx('edit-area-container')}>
                       <input
-                        value={inputUsername || currUser.nickname}
+                        value={isInputText ? inputUsername : currUser.nickname}
                         type="text"
                         className={cx('input-text')}
                         placeholder="Username"
                         onChange={handleChangeInputUsername}
                       />
-                      <p className={cx('username-url')}>www.tiktok.com/@kurumi090103</p>
+                      <p className={cx('username-url')} ref={inputUsernameRef}>{`clone-tiktok-app.netlify.app/@${
+                        isInputText ? inputUsername : currUser.nickname
+                      }`}</p>
                       <p className={cx('username-desc')}>
                         Usernames can only contain letters, numbers, underscores, and periods. Changing your username
                         will also change your profile link.
@@ -106,7 +161,7 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
                         onChange={handleChangeAreaInputBio}
                         className={cx('input-textarea')}
                         placeholder="Bio"
-                        value={areaInputBio}
+                        value={areaInputBio || currUser.bio}
                       ></textarea>
                       <div className={cx('text-count')}>
                         <span>62/</span>
@@ -119,7 +174,14 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
                   <Button outline primary className={cx('custom-btn')} onClick={handleCloseModal}>
                     Cancel
                   </Button>
-                  <Button outline primary className={cx('custom-btn', 'custom-disable')} disable>
+                  <Button
+                    outline
+                    primary
+                    className={cx('custom-btn', { 'custom-disable': isDisabled, ability: !isDisabled })}
+                    disable={isDisabled}
+                    refBtn={saveRef}
+                    onClick={handleSaveProfile}
+                  >
                     Save
                   </Button>
                 </div>

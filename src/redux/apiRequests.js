@@ -1,5 +1,7 @@
 import { userLogin, userRegister } from '~/services/authService';
 import { loginFailed, loginStart, loginSuccess, registerStart, registerSuccess, registerFailed } from './authSlice';
+import { updateProfileFailed, updateProfileStart } from './profileSlice';
+import { updateCurrentProfileUser } from '~/services/userService';
 
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart());
@@ -34,5 +36,17 @@ export const registerUser = async (user, dispatch) => {
     }
   } catch (err) {
     dispatch(registerFailed(err));
+  }
+};
+export const updateProfile = async (data, dispatch,navigate) => {
+  dispatch(updateProfileStart());
+  try {
+    const result = await updateCurrentProfileUser(data);
+    if (result.status === 200) {
+      dispatch(loginSuccess(result.data.data));
+      navigate(`@${result.data.data.nickname}`);
+    }
+  } catch (error) {
+    dispatch(updateProfileFailed(error));
   }
 };

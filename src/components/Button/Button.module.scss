@@ -12,8 +12,6 @@
   justify-content: center;
   margin-left: 16px;
 
-  // + .wrapper {
-  // }
   &.disable {
     pointer-events: none;
     opacity: 0.5;
@@ -38,8 +36,8 @@
   font-weight: 600;
 }
 
-.icon~.title,
-.title~.icon {
+.icon ~ .title,
+.title ~ .icon {
   margin-left: 8px;
 }
 
@@ -65,7 +63,7 @@
   justify-content: space-between;
   align-items: center;
   border-radius: 0.2rem;
-  transition: background-color 250ms ease 0s;
+  transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
 
   &:hover {
     background-color: var(--light-grey-003);

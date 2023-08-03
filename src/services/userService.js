@@ -44,3 +44,16 @@ export const getCurrentProfileUser = async (nickname) => {
     return error;
   }
 };
+
+export const updateCurrentProfileUser = async (data) => {
+  try {
+    const res = await httpRequest.post(`auth/me`, data, {
+      params: {
+        _method: 'PATCH',
+      },
+    });
+    return res;
+  } catch (error) {
+    return error;
+  }
+};

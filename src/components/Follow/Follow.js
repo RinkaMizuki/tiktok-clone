@@ -44,11 +44,24 @@ const Follow = (props) => {
   return (
     <div>
       {isFollowed ? (
-        <Button primary onClick={handleChangeStateFollow} className={cx('Following')}>
+        <Button
+          primary
+          onClick={handleChangeStateFollow}
+          className={cx('Following', {
+            [props.className]: props.className,
+          })}
+        >
           Following
         </Button>
       ) : (
-        <Button primary outline onClick={handleChangeStateFollow} className={cx('Follow')} >
+        <Button
+          primary
+          outline
+          onClick={handleChangeStateFollow}
+          className={cx('Follow', {
+            [props.className]: props.className,
+          })}
+        >
           Follow
         </Button>
       )}

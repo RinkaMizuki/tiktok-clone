@@ -5,6 +5,7 @@ import { useState, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
 const Image = forwardRef(({ src, alt, className, fallBack: customFallback = image.noImage, ...props }, ref) => {
+  // console.log(src);
   const [fallBack, setFallBack] = useState('');
   const handleErrorImg = () => {
     setFallBack(customFallback);

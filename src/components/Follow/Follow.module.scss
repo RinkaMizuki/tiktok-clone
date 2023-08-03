@@ -2,11 +2,13 @@
   border: 1px solid var(--primary);
   background-color: var(--white-content);
   color: var(--primary) !important;
+  transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
 }
 .Following {
   color: var(--light-btn-chat-notice) !important;
   background-color: var(--white-btn-hover);
   border: 1px solid var(--light-line-search);
+  transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
   &:hover {
     background-color: var(--light-bg-following);
     border-color: var(--light-bd-following);

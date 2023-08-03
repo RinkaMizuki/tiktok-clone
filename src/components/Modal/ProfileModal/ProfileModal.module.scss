@@ -123,6 +123,7 @@
   bottom: 0;
   right: 0;
   cursor: pointer;
+  border-radius: 16px;
   & > .edit-icon {
     width: 32px;
     height: 32px;
@@ -136,8 +137,8 @@
   }
 }
 .input-upload {
-  width: 1px;
-  height: 1px;
+  width: 0px;
+  height: 0px;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -281,5 +282,14 @@
   100% {
     opacity: 0.2;
     transform: scale(1);
+  }
+}
+
+.ability {
+  background-color: rgb(254, 44, 85);
+  color: var(--white-content) !important;
+  &:hover {
+    border-color: var(--primary);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(254, 44, 85);
   }
 }

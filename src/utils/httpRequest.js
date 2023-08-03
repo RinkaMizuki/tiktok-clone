@@ -12,9 +12,9 @@ export const get = async (path, options = {}) => {
   return res.data;
 };
 
-export const post = async (path, options = {}) => {
-  const res = await httpRequest.post(path, options);
+export const post = async (path, options = {}, params = {}) => {
+  const res = await httpRequest.post(path, options, params);
   return res;
-}
+};
 
 export default httpRequest;
