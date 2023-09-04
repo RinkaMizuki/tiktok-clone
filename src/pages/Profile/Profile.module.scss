@@ -9,11 +9,10 @@
   --light-bg-edit: var(--dark-bg-edit);
 }
 
-.Profile {
+.profile {
   margin-left: 10px;
   padding: 32px 24px;
   width: 100%;
-  height: 100%;
 }
 .info-user {
   margin-bottom: 20px;
@@ -64,6 +63,17 @@
   line-height: 38px;
   margin-bottom: 4px;
   text-overflow: ellipsis;
+}
+.check {
+  color: rgb(32, 213, 236);
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+.wrapper-username {
+  display: flex;
+  align-self: start;
 }
 .nickname {
   font-family: TikTokFont, sans-serif;
@@ -215,7 +225,7 @@
   align-items: center;
   margin: 0 auto;
 }
-.error-container {
+.empty-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -244,7 +254,10 @@
 .custom-icon-user {
   color: var(--light);
 }
-
+.custom-icon-bookmark {
+  width: 72px;
+  height: 72px;
+}
 .custom-placement {
   inset: 0px 0px auto auto;
   transform: translate3d(22px, 2px, 0px);
@@ -258,10 +271,14 @@
   height: 116px;
   object-fit: cover;
 }
-.custom-btn {
-  min-width: 208px;
-  line-height: 22px;
-  font-weight: 600;
-  font-size: 18px;
-  margin: 0;
+.custom-bookmark {
+  width: 72px;
+  height: 72px;
 }
+.video-preview {
+  display: grid;
+  gap: 24px 16px;
+  padding-top: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(184px, 1fr));
+}
+

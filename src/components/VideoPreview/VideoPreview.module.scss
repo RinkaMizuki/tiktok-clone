@@ -1,0 +1,36 @@
+.video-container {
+  display: grid;
+  gap: 24px 16px;
+  grid-template-columns: repeat(auto-fill, minmax(184px, 1fr));
+}
+.video-item-container {
+  height: 302px;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+.thumb-video {
+  background-color: #333;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  z-index: 2;
+}
+.video {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+  position: relative;
+}
+.position {
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}

@@ -6,6 +6,7 @@ import AccountItem from './AccountItem';
 import { useEffect, useState } from 'react';
 import { getSuggested } from '~/services/userService';
 import AccountLoading from '../Loadings/AccountLoading';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -44,7 +45,7 @@ function SuggestAccounts({ seeAll, labelSuggested, sideBarRef }) {
 
   const handleSeeAll = () => {
     setShowLoadAll(!showLoadAll);
-    if(showLoadAll) {
+    if (showLoadAll) {
       scrollTop();
     }
   };
@@ -57,9 +58,11 @@ function SuggestAccounts({ seeAll, labelSuggested, sideBarRef }) {
       {isLoading ? (
         <AccountLoading />
       ) : (
-        suggestAccounts
-          .slice(0, loadCount)
-          .map((account) => <AccountItem data={account} key={account.id} label={labelSuggested} />)
+        suggestAccounts.slice(0, loadCount).map((account) => (
+          <Link to={`/@${account.nickname}`} key={account.id}>
+            <AccountItem data={account} label={labelSuggested} />
+          </Link>
+        ))
       )}
       {!isLoading && (
         <button className={cx('more-btn')}>

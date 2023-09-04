@@ -5,6 +5,7 @@ import styles from './FollowAccounts.module.scss';
 import { getFollowed } from '~/services/userService';
 import AccountItem from '../SuggestAccounts/AccountItem/AccountItem';
 import AccountLoading from '../Loadings/AccountLoading';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 let totalPages;
@@ -72,8 +73,10 @@ const FollowAccounts = ({ labelFollowed, seeMore, sideBarRef }) => {
       {isLoading && followAccounts.length > 0 ? (
         <>
           <>
-            {followAccounts.slice(0, loadCount).map((account, index) => (
-              <AccountItem data={account} key={account.id} label={labelFollowed} isFollowed={account.is_followed} />
+            {followAccounts.slice(0, loadCount).map((account) => (
+              <Link to={`/@${account.nickname}`} key={account.id}>
+                <AccountItem data={account} label={labelFollowed} isFollowed={account.is_followed} />
+              </Link>
             ))}
           </>
 
@@ -84,11 +87,11 @@ const FollowAccounts = ({ labelFollowed, seeMore, sideBarRef }) => {
           {isLoading ? (
             <AccountLoading />
           ) : (
-            followAccounts
-              .slice(0, loadCount)
-              .map((account) => (
-                <AccountItem data={account} key={account.id} label={labelFollowed} isFollowed={account.is_followed} />
-              ))
+            followAccounts.slice(0, loadCount).map((account) => (
+              <Link to={`/@${account.nickname}`} key={account.id}>
+                <AccountItem data={account} label={labelFollowed} isFollowed={account.is_followed} />
+              </Link>
+            ))
           )}
         </>
       )}

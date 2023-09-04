@@ -17,14 +17,15 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
   const [selectedAvatar, setSelectedAvatar] = useState(currUser.avatar);
   const [isClosed, setIsClosed] = useState(false);
   const [areaInputBio, setAreaInputBio] = useState('');
-  const [inputUsername, setInputUserName] = useState('');
-  const [inputName, setInputname] = useState('');
-  const [isInputText, setIsInputText] = useState(false);
+  const [inputFirstname, setInputFirstname] = useState('');
+  const [inputLastname, setInputLastname] = useState('');
   const [isDisabled, setIsDisabled] = useState(true);
-
-  const inputUsernameRef = useRef(null);
   const saveRef = useRef(null);
   const inputFileRef = useRef(null);
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const bioRef = useRef(null);
+  const countRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,23 +35,37 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
       onHideModal();
     }, 290);
   };
+  useEffect(() => {
+    if (!inputFirstname) {
+      firstNameRef.current.value = currUser.first_name;
+    }
+    if (!inputLastname) {
+      lastNameRef.current.value = currUser.last_name;
+    }
+    if (!areaInputBio) {
+      bioRef.current.value = currUser.bio;
+    }
+  }, [areaInputBio, inputFirstname, inputLastname]);
 
-  // useEffect(() => {
-  //   // const updateProfileUser = async () => {
-  //   //   await updateProfile();
-  //   // };
-  //   // updateProfileUser();
-
-  // }, [selectedAvatar]);
-
-  const handleChangeInputUsername = (e) => {
-    setInputUserName(e.target.value);
-    e.target.value && setIsInputText(true);
+  const handleChangeFirstname = (e) => {
+    currUser.first_name !== e.target.value ? setIsDisabled(false) : setIsDisabled(true);
+    setInputFirstname(e.target.value);
   };
-  const handleChangeInputName = (e) => {
-    setInputname(e.target.value);
+  const handleChangeLastname = (e) => {
+    currUser.last_name !== e.target.value ? setIsDisabled(false) : setIsDisabled(true);
+    setInputLastname(e.target.value);
   };
   const handleChangeAreaInputBio = (e) => {
+    currUser.bio !== e.target.value ? setIsDisabled(false) : setIsDisabled(true);
+    if (e.target.value.length > 80) {
+      countRef.current.style.color = '#fe2c55';
+      bioRef.current.style.outline = '1px solid #fe2c55';
+      setIsDisabled(true);
+    } else if (isDisabled && e.target.value.length <= 80) {
+      bioRef.current.style.outline = 'none';
+      countRef.current.style.color = 'currentColor';
+      setIsDisabled(false);
+    }
     setAreaInputBio(e.target.value);
   };
 
@@ -71,10 +86,13 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
   const handleSaveProfile = async () => {
     const formData = new FormData();
     setIsDisabled(true);
+    formData.append('first_name', inputFirstname);
+    formData.append('last_name', inputLastname);
+    formData.append('bio', areaInputBio);
     if (file) {
       formData.append('avatar', file);
-      await updateProfile(formData, dispatch, navigate);
     }
+    await updateProfile(formData, dispatch, navigate);
     window.location.reload();
   };
   return (
@@ -123,18 +141,17 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
                     </div>
                   </div>
                   <div className={cx('username-container')}>
-                    <div className={cx('label')}>Username</div>
+                    <div className={cx('label')}>Frist Name</div>
                     <div className={cx('edit-area-container')}>
                       <input
-                        value={isInputText ? inputUsername : currUser.nickname}
+                        value={inputFirstname}
                         type="text"
                         className={cx('input-text')}
                         placeholder="Username"
-                        onChange={handleChangeInputUsername}
+                        onChange={handleChangeFirstname}
+                        ref={firstNameRef}
                       />
-                      <p className={cx('username-url')} ref={inputUsernameRef}>{`clone-tiktok-app.netlify.app/@${
-                        isInputText ? inputUsername : currUser.nickname
-                      }`}</p>
+                      <p className={cx('username-url')}>{`clone-tiktok-app.netlify.app/@${currUser.nickname}`}</p>
                       <p className={cx('username-desc')}>
                         Usernames can only contain letters, numbers, underscores, and periods. Changing your username
                         will also change your profile link.
@@ -142,14 +159,15 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
                     </div>
                   </div>
                   <div className={cx('name-container')}>
-                    <div className={cx('label')}>Name</div>
+                    <div className={cx('label')}>Last Name</div>
                     <div className={cx('edit-area-container')}>
                       <input
-                        value={inputName || `${currUser.last_name} ${currUser.first_name}`}
+                        value={inputLastname}
                         type="text"
                         placeholder="Name"
                         className={cx('input-text')}
-                        onChange={handleChangeInputName}
+                        onChange={handleChangeLastname}
+                        ref={lastNameRef}
                       />
                       <p className={cx('name-desc')}>Your nickname can only be changed once every 7 days.</p>
                     </div>
@@ -161,10 +179,13 @@ const ProfileModal = ({ onHideModal, isShowing }) => {
                         onChange={handleChangeAreaInputBio}
                         className={cx('input-textarea')}
                         placeholder="Bio"
-                        value={areaInputBio || currUser.bio}
+                        value={areaInputBio}
+                        ref={bioRef}
                       ></textarea>
                       <div className={cx('text-count')}>
-                        <span>62/</span>
+                        <span ref={countRef}>
+                          {bioRef.current?.value?.length.toString() || currUser.bio.length.toString()}/
+                        </span>
                         80
                       </div>
                     </div>

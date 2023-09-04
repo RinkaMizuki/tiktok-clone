@@ -8,35 +8,34 @@ import { handleCurrentVideoId, handleRequestFollow, handleRequestUnFollow } from
 
 const cx = classNames.bind(styles);
 
-const Follow = (props) => {
+const Follow = ({ userId, isCurrStateFollow, profile = false, onShowModalForm = () => {}, isLogin = true }) => {
   const dispatch = useDispatch();
-  const [isFollowed, setIsFollowed] = useState(props.isCurrStateFollow);
-
+  const [isFollowed, setIsFollowed] = useState(isCurrStateFollow);
   const { currentUserId, isChangeFollow, stateFollow, synchronizedFollow } = useSelector((state) => state.follow);
 
   useLayoutEffect(() => {
-    setIsFollowed(props.isCurrStateFollow);
-  }, [props.userId]);
+    setIsFollowed(isCurrStateFollow);
+  }, [userId]);
 
   useEffect(() => {
-    if (props.userId === currentUserId) {
+    if (userId === currentUserId) {
       synchronizedFollow && setIsFollowed(stateFollow);
     }
   }, [isChangeFollow]);
 
   const handleChangeStateFollow = () => {
-    dispatch(handleCurrentVideoId(props.userId));
+    dispatch(handleCurrentVideoId(userId));
     if (!isFollowed) {
       (async () => {
         setIsFollowed(true);
         dispatch(handleRequestFollow());
-        await requestStateFollow.followedUser(props.userId);
+        await requestStateFollow.followedUser(userId);
       })();
     } else {
       (async () => {
         setIsFollowed(false);
         dispatch(handleRequestUnFollow());
-        await requestStateFollow.unFollowedUser(props.userId);
+        await requestStateFollow.unFollowedUser(userId);
       })();
     }
   };
@@ -46,9 +45,9 @@ const Follow = (props) => {
       {isFollowed ? (
         <Button
           primary
-          onClick={handleChangeStateFollow}
+          onClick={isLogin ? handleChangeStateFollow : onShowModalForm}
           className={cx('Following', {
-            [props.className]: props.className,
+            profileFollowing: profile,
           })}
         >
           Following
@@ -57,9 +56,9 @@ const Follow = (props) => {
         <Button
           primary
           outline
-          onClick={handleChangeStateFollow}
+          onClick={isLogin ? handleChangeStateFollow : onShowModalForm}
           className={cx('Follow', {
-            [props.className]: props.className,
+            profileUnfollow: profile,
           })}
         >
           Follow

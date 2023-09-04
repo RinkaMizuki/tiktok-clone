@@ -39,7 +39,7 @@ function AccountPreview({ data, children, label, isFollowed }) {
                 <div className={cx('body')}>
                   <span className={cx('nickname')}>{data.nickname}</span>
                   {data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
-                  <p className={cx('name')}>{data.name}</p>
+                  <p className={cx('name')}>{`${data.first_name} ${data.last_name}`}</p>
                   <p className={cx('footer')}>
                     <span>{`${data.followers_count}`}</span>
                     <span>Follower</span>

@@ -43,8 +43,8 @@
   cursor: pointer;
   color: var(--light-grey);
   font-family: 'ProximaNova', sans-serif;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 400;
+  font-size: 13px;
   line-height: 20px;
 }
 
@@ -82,6 +82,6 @@
   border: 1px solid var(--light-line-search);
   &:hover {
     background-color: var(--light-bg-following);
-    border-color :var(--light-bd-following);
+    border-color: var(--light-bd-following);
   }
 }

@@ -14,3 +14,20 @@
     border-color: var(--light-bd-following);
   }
 }
+
+.profileFollowing,
+.profileUnfollow {
+  min-width: 208px;
+  line-height: 22px;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0;
+}
+.profileUnfollow {
+  color: rgb(255, 255, 255) !important;
+  background-color: rgb(255, 59, 92);
+  &:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(254, 44, 85);
+  }
+}
+
