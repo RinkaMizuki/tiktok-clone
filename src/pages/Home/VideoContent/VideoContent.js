@@ -12,40 +12,64 @@ import {
   faPause,
 } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useElementOnScreen } from '~/hooks';
+import { InView, useInView } from 'react-intersection-observer';
+import { useClickAway } from 'react-use';
 import { useDispatch, useSelector } from 'react-redux';
-import { adjustVolume, muteVolume } from '~/redux/videoSlice';
+import { adjustVolume, muteVolume, setIndexVideoPlayed } from '~/redux/videoSlice';
 import TiktokLoading from '~/components/Loadings/TiktokLoading';
 import { useLocalStorage } from '~/hooks';
 import TippyShare from '~/components/Tippy/TippyShare';
 
 const cx = classNames.bind(styles);
 
-function VideoContent({ data }) {
+function VideoContent({ data, index }) {
   const [playing, setPlaying] = useState(false);
   const [isLoadingVideo, setIsLoadingVideo] = useState(false);
-  const videoRef = useRef();
-  const adjustRef = useRef();
-  const selectorRef = useRef();
-  const timerRef = useRef();
-  const timerTrackRef = useRef();
+  const [renderEvent, setRenderEvent] = useState(true);
+  const [isInViewPlayed, setIsInViewPlayed] = useState(false);
+  const [userInteract, setUserInteract] = useState(false);
+  const [timer, setTimer] = useState(0);
+
+  const {
+    meta: {
+      video: { resolution_x: videoWidth, resolution_y: videoHeight },
+    },
+  } = data;
+
+  const frameRate = videoWidth - videoHeight > 0;
+  const directionVideoClass = frameRate ? 'horizontal' : 'vertical';
+
+  const [inViewRef, isInView] = useInView({ root: null, threshold: frameRate ? 0.888 : 0.57 });
+
+  const videoRef = useRef(null);
+  const adjustRef = useRef(null);
+  const selectorRef = useRef(null);
+  const timerRef = useRef(null);
+  const timerTrackRef = useRef(null);
+  const timerCircleRef = useRef(null);
+  const playRef = useRef(null);
+  const pauseRef = useRef(null);
+  const menuRef = useRef(null);
+  const volumeControlRef = useRef(null);
+  const volumeHighRef = useRef(null);
+  const volumeMutedRef = useRef(null);
+  const videoContainerRef = useRef(null);
+  const volumeContainer = useRef(null);
+
   const { setLocalStorage } = useLocalStorage();
 
   const dispatch = useDispatch();
   const muted = useSelector((state) => state.video.isMuted);
   const volume = useSelector((state) => state.video.defaultVolume);
-  const options = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.3,
-  };
-  const isVisible = useElementOnScreen(options, videoRef);
+  const indexVideoPlayed = useSelector((state) => state.video.index);
+
   useEffect(() => {
-    if (isVisible) {
-      if (!playing) {
-        videoRef.current.play();
-        setPlaying(true);
-      }
+    if (isInView) {
+      // if (!playing) {
+      videoRef.current.play();
+      setPlaying(true);
+      dispatch(setIndexVideoPlayed(index));
+      // }
     } else {
       if (playing) {
         videoRef.current.pause();
@@ -53,7 +77,55 @@ function VideoContent({ data }) {
         setPlaying(false);
       }
     }
-  }, [isVisible]);
+  }, [isInView]);
+
+  useEffect(() => {
+    if (indexVideoPlayed !== index) {
+      videoRef.current.pause();
+      if (playing) {
+        videoRef.current.currentTime = 0;
+        const currentTime = videoRef.current?.currentTime;
+        const duration = videoRef.current?.duration;
+        const currTime = convertTime(currentTime, ':');
+        const totalTime = convertTime(duration, ':');
+        handleControlVideo(currentTime, duration, currTime, totalTime);
+      }
+      setPlaying(false);
+      setIsInViewPlayed(false);
+    } else {
+      videoRef.current.play();
+      setPlaying(true);
+      setIsInViewPlayed(true);
+    }
+  }, [indexVideoPlayed]);
+
+  useEffect(() => {
+    const currentScrollPos = window.scrollY;
+
+    const handleInteractive = () => {
+      const newScrollPos = window.scrollY;
+      setUserInteract(false);
+      if (newScrollPos > currentScrollPos) {
+        //scroll down
+        if (playing) {
+          dispatch(setIndexVideoPlayed(index + 1));
+        }
+      } else {
+        //scroll up
+        index > 0
+          ? dispatch(setIndexVideoPlayed(index - 1))
+          : index !== indexVideoPlayed && dispatch(setIndexVideoPlayed(index));
+      }
+    };
+
+    if (userInteract) {
+      document.addEventListener('scroll', handleInteractive);
+      return () => {
+        document.removeEventListener('scroll', handleInteractive);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInteract, playing]);
 
   useLayoutEffect(() => {
     const {
@@ -80,17 +152,56 @@ function VideoContent({ data }) {
     selectorRef.current.style.width = `${muted ? 0 : volume * 46}px`;
   }, [muted, volume]);
 
+  useClickAway(videoContainerRef, () => {
+    //when click outside of video
+    if (pauseRef.current) {
+      pauseRef.current.style.opacity = '0';
+    } else if (playRef.current) {
+      playRef.current.style.opacity = '0';
+    }
+    menuRef.current.style.opacity = '0';
+    volumeControlRef.current.style.opacity = '0';
+    if (volumeHighRef.current) {
+      volumeHighRef.current.style.opacity = '0';
+    } else if (volumeMutedRef.current) {
+      volumeMutedRef.current.style.opacity = '0';
+    }
+    setRenderEvent(true);
+  });
+
   const handlePlayVideo = () => {
     if (!playing) {
       videoRef.current.play();
+      playRef.current.style.opacity = '1';
+      menuRef.current.style.opacity = '1';
+      if (volumeHighRef.current) {
+        volumeHighRef.current.style.opacity = '1';
+      } else if (volumeMutedRef.current) {
+        volumeMutedRef.current.style.opacity = '1';
+      }
+      volumeControlRef.current.style.opacity = '0';
       setPlaying(true);
+      indexVideoPlayed !== index && dispatch(setIndexVideoPlayed(index));
+      if (!isInView) {
+        setUserInteract(true);
+      }
     }
+    setRenderEvent(true);
   };
 
   const handlePauseVideo = () => {
     if (playing) {
       videoRef.current.pause();
+      pauseRef.current.style.opacity = '1';
+      menuRef.current.style.opacity = '1';
+      if (volumeHighRef.current) {
+        volumeHighRef.current.style.opacity = '1';
+      } else if (volumeMutedRef.current) {
+        volumeMutedRef.current.style.opacity = '1';
+      }
+      volumeControlRef.current.style.opacity = '0';
       setPlaying(false);
+      setRenderEvent(true);
     }
   };
 
@@ -100,6 +211,12 @@ function VideoContent({ data }) {
     selectorRef.current.style.width = `${rangeVolume * 45}px`;
     dispatch(muteVolume(!rangeVolume > 0));
     dispatch(adjustVolume(rangeVolume));
+    if (pauseRef.current) {
+      pauseRef.current.style.opacity = '0';
+    } else if (playRef.current) {
+      playRef.current.style.opacity = '0';
+    }
+    menuRef.current.style.opacity = '0';
   };
 
   const handleSetFinalVolume = (value) => {
@@ -110,6 +227,19 @@ function VideoContent({ data }) {
   const handleMutedVideo = () => {
     dispatch(adjustVolume(volume === 0 ? 0.5 : volume));
     dispatch(muteVolume(!muted));
+    if (pauseRef.current) {
+      pauseRef.current.style.opacity = '1';
+    } else if (playRef.current) {
+      playRef.current.style.opacity = '1';
+    }
+    menuRef.current.style.opacity = '1';
+    volumeControlRef.current.style.opacity = '1';
+    if (volumeHighRef.current) {
+      volumeHighRef.current.style.opacity = '1';
+    } else if (volumeMutedRef.current) {
+      volumeMutedRef.current.style.opacity = '1';
+    }
+    setRenderEvent(false);
   };
   const handleEndedVideo = (e) => {
     if (Math.floor(e.target.duration) === Math.floor(data.meta.playtime_seconds)) {
@@ -117,7 +247,10 @@ function VideoContent({ data }) {
     }
   };
 
-  const handleShowMenu = () => {};
+  const handleShowMenu = () => {
+    volumeControlRef.current.style.opacity = '0';
+    setRenderEvent(true);
+  };
 
   var convertTime = function (input, separator) {
     var pad = function (input) {
@@ -128,13 +261,18 @@ function VideoContent({ data }) {
     );
   };
 
+  function handleControlVideo(currentTime, duration, currTime, totalTime) {
+    timerTrackRef.current.style.width = `${Math.ceil((currentTime / duration) * 100)}%`;
+    timerCircleRef.current.value = Math.ceil((currentTime * 100) / duration);
+    timerRef.current.innerText = `${currTime}/${totalTime}`;
+    setTimer(Math.ceil((currentTime * 100) / duration));
+  }
+
   const handleUpdateTimer = (e) => {
     const { currentTime, duration } = e.target;
     const currTime = convertTime(currentTime, ':');
     const totalTime = convertTime(duration, ':');
-
-    timerTrackRef.current.style.width = `${(currentTime / duration) * 100}%`;
-    timerRef.current.innerText = `${currTime}/${totalTime}`;
+    handleControlVideo(currentTime, duration, currTime, totalTime);
   };
 
   const handleWaitingVideo = () => {
@@ -144,21 +282,29 @@ function VideoContent({ data }) {
     setIsLoadingVideo(false);
   };
 
-  const {
-    meta: {
-      video: { resolution_x: videoWidth, resolution_y: videoHeight },
-    },
-  } = data;
+  const handleMouseInto = () => {
+    volumeControlRef.current.style.opacity = '1';
+  };
+  const handleMouseOut = () => {
+    volumeControlRef.current.style.opacity = '0';
+  };
 
-  const directionVideoClass = videoWidth - videoHeight > 0 ? 'horizontal' : 'vertical';
+  const handleChangeTime = (e) => {
+    const currentTimeVideo = (e.target.value * videoRef.current.duration) / 100;
+    timerTrackRef.current.style.width = `${Math.ceil((currentTimeVideo * 100) / videoRef.current.duration)}%`;
+    videoRef.current.currentTime = currentTimeVideo;
+    setTimer(e.target.value);
+  };
+
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx('wrapper')} ref={inViewRef}>
       <div
+        ref={videoContainerRef}
         className={cx('video-container', {
           [directionVideoClass]: directionVideoClass,
         })}
       >
-        {isVisible ? (
+        {isInView || isInViewPlayed ? (
           <img
             alt="thumb-video"
             src={data.thumb_url}
@@ -189,7 +335,7 @@ function VideoContent({ data }) {
             animation: 'animation',
           })}
         >
-          <FontAwesomeIcon className={cx('custom-icon')} icon={faEllipsis} />
+          <FontAwesomeIcon ref={menuRef} className={cx('custom-icon')} icon={faEllipsis} />
         </div>
         {!playing ? (
           <div
@@ -198,7 +344,8 @@ function VideoContent({ data }) {
               animation: 'animation',
             })}
           >
-            <FontAwesomeIcon className={cx('custom-icon')} icon={faPlay} />
+            {isInView && <h1 style={{ color: 'red' }}>In view</h1>}
+            <FontAwesomeIcon ref={playRef} className={cx('custom-icon')} icon={faPlay} />
           </div>
         ) : (
           <div
@@ -207,7 +354,8 @@ function VideoContent({ data }) {
               animation: 'animation',
             })}
           >
-            <FontAwesomeIcon className={cx('custom-icon')} icon={faPause} />
+            {isInView && <h1 style={{ color: 'red' }}>In view</h1>}
+            <FontAwesomeIcon ref={pauseRef} className={cx('custom-icon')} icon={faPause} />
           </div>
         )}
         <div
@@ -215,42 +363,60 @@ function VideoContent({ data }) {
             animation: 'animation',
           })}
         >
-          <div className={cx('volume-control')}>
-            <div className={cx('volume-bar')}>
-              <input
-                className={cx('input')}
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                onChange={(e) => handleAdjustVolume(e.target.value)}
-                onMouseUp={(e) => handleSetFinalVolume(e.target.value)}
-                ref={adjustRef}
-              />
-              <div className={cx('selector')} ref={selectorRef}></div>
+          <div
+            ref={volumeContainer}
+            onMouseEnter={renderEvent ? handleMouseInto : () => {}}
+            onMouseLeave={renderEvent ? handleMouseOut : () => {}}
+          >
+            <div ref={volumeControlRef} className={cx('volume-control')}>
+              <div className={cx('volume-bar')}>
+                <input
+                  className={cx('input')}
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  onChange={(e) => handleAdjustVolume(e.target.value)}
+                  onMouseUp={(e) => handleSetFinalVolume(e.target.value)}
+                  ref={adjustRef}
+                />
+                <div className={cx('selector')} ref={selectorRef}></div>
+              </div>
             </div>
+            {!muted ? (
+              <FontAwesomeIcon
+                style={{ padding: '10px' }}
+                className={cx('custom-icon')}
+                icon={faVolumeHigh}
+                ref={volumeHighRef}
+                onClick={handleMutedVideo}
+              />
+            ) : (
+              <FontAwesomeIcon
+                style={{ padding: '10px' }}
+                className={cx('custom-icon', {
+                  showing: muted,
+                })}
+                icon={faVolumeMute}
+                ref={volumeMutedRef}
+                onClick={handleMutedVideo}
+              />
+            )}
           </div>
-          {!muted ? (
-            <FontAwesomeIcon
-              style={{ padding: '10px' }}
-              className={cx('custom-icon')}
-              icon={faVolumeHigh}
-              onClick={handleMutedVideo}
-            />
-          ) : (
-            <FontAwesomeIcon
-              style={{ padding: '10px' }}
-              className={cx('custom-icon', {
-                showing: muted,
-              })}
-              icon={faVolumeMute}
-              onClick={handleMutedVideo}
-            />
-          )}
         </div>
         <div className={cx('time-duration-container')}>
           <div className={cx('time-duration')}>
-            <div className={cx('time-duration-bar')}></div>
+            <div className={cx('timer-control')}></div>
+            <input
+              ref={timerCircleRef}
+              className={cx('input')}
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value={timer}
+              onInput={handleChangeTime}
+            />
             <div className={cx('time-duration-track')} ref={timerTrackRef}></div>
           </div>
           <div className={cx('display-timer')} ref={timerRef}></div>

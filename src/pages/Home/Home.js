@@ -63,9 +63,9 @@ function Home() {
     /*focus để khi reload sẽ tự focus*/
     //<div id="focus" tabIndex="1">
     <div className={cx('wrapper')}>
-      {videos.map((video, index) => (
-        <VideoInfo key={index} data={video} />
-      ))}
+      {videos.map((video, index) => {
+        return <VideoInfo key={index} data={video} index={index} />;
+      })}
       <InView onChange={(inView) => inView && handleGetPageRandom(handleRandomPage(1, page))}>
         {videos.length === 0 ? (
           <HomeAccountLoading />

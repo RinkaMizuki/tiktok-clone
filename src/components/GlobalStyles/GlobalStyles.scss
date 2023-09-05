@@ -282,8 +282,7 @@ html *::-webkit-scrollbar-track {
 // }
 
 body {
-  overflow-y: hidden;
-  overflow-x: hidden;
+  overflow-y: overlay;
   font-family: var(--font-family);
   line-height: 1.5;
   text-rendering: optimizeSpeed;
