@@ -344,7 +344,6 @@ function VideoContent({ data, index }) {
               animation: 'animation',
             })}
           >
-            {isInView && <h1 style={{ color: 'red' }}>In view</h1>}
             <FontAwesomeIcon ref={playRef} className={cx('custom-icon')} icon={faPlay} />
           </div>
         ) : (
@@ -354,7 +353,6 @@ function VideoContent({ data, index }) {
               animation: 'animation',
             })}
           >
-            {isInView && <h1 style={{ color: 'red' }}>In view</h1>}
             <FontAwesomeIcon ref={pauseRef} className={cx('custom-icon')} icon={faPause} />
           </div>
         )}
