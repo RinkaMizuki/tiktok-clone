@@ -3,7 +3,7 @@ import styles from './HomeAccountLoading.module.scss';
 
 const cx = classNames.bind(styles);
 
-const HomeAccountLoading = (props) => {
+const HomeAccountLoading = () => {
   return (
     <div className={cx('wrapper')}>
       <div className={cx('avatar')}>

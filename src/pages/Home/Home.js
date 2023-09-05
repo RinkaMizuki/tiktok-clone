@@ -68,7 +68,7 @@ function Home() {
       })}
       <InView onChange={(inView) => inView && handleGetPageRandom(handleRandomPage(1, page))}>
         {videos.length === 0 ? (
-          <HomeAccountLoading />
+          <HomeAccountLoading/>
         ) : (
           <i className={cx('auto-load-more')}>
             <TiktokLoading></TiktokLoading>

@@ -10,12 +10,14 @@
   margin-top: 60px;
   width: 100%;
   max-width: var(--default-layout-width);
+  background-color: var(--white-content);
+  transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
   display: flex;
 }
 
 .content {
+  height: 100%;
   width: 100%;
-  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   align-items: center;
