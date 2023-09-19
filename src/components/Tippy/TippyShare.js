@@ -95,21 +95,20 @@ const TippyShare = ({ children, delay, interactive = false, zIndex, placement, c
         <div {...attrs} tabIndex="-1" className={cx('tippy-container', className)}>
           <div className={cx('share-wrapper')}>
             {listMediaSocial.slice(0, loadListItem).map((item, index) => (
-              <a href="#" key={index} className={cx('item-wrapper')}>
+              <button key={index} className={cx('item-wrapper')}>
                 {item.icon}
                 <span className={cx('item-text')}>{item.desc}</span>
-              </a>
+              </button>
             ))}
-            <a
+            <button
               ref={caretRef}
-              href="#"
               className={cx('item-wrapper', {
                 'item-caret-down': 'item-caret-down',
               })}
               onClick={handleShowItem}
             >
               {itemList ? null : <CaretDownSmall />}
-            </a>
+            </button>
           </div>
         </div>
       )}

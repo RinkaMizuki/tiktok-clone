@@ -6,7 +6,7 @@ export const videoSlice = createSlice({
     defaultVolume: 0.5,
     isMuted: true,
     id: '',
-    index: '',
+    index: [],
   },
   reducers: {
     adjustVolume: (state, action) => {
@@ -18,11 +18,14 @@ export const videoSlice = createSlice({
     setIdVideoPlay: (state, action) => {
       state.id = action.payload;
     },
-    setIndexVideoPlayed: (state, action) => {
-      state.index = action.payload;
+    updateInviewList: (state, action) => {
+      const cloneIndexArr = [...state.index];
+      cloneIndexArr.splice(action.payload.index, 1, action.payload);
+      state.index = cloneIndexArr;
     },
   },
 });
 
-export const { adjustVolume, muteVolume, setIdVideoPlay, setIndexVideoPlayed } = videoSlice.actions;
+export const { adjustVolume, muteVolume, setIdVideoPlay, setStateIndexView, updateInviewList } =
+  videoSlice.actions;
 export default videoSlice.reducer;

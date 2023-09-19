@@ -14,7 +14,7 @@ import { ModuleContext } from '~/context/ModalContext';
 
 const cx = classNames.bind(styles);
 
-function VideoInfo({ data, index }) {
+function VideoInfo({ data, index, indexInView, priorVideo, currentElement }) {
   const { handleShowModalForm } = useContext(ModuleContext);
   const isLogin = useSelector((state) => state.auth.login.isLogin);
   return (
@@ -81,7 +81,13 @@ function VideoInfo({ data, index }) {
           )}
         </div>
       </div>
-      <VideoContent data={data} index={index} />
+      <VideoContent
+        data={data}
+        index={index}
+        indexInView={indexInView}
+        priorVideo={priorVideo}
+        currentElement={currentElement}
+      />
     </div>
   );
 }

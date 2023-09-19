@@ -10,6 +10,7 @@
   background-color: var(--light-bg-preview);
   padding-right: 4px;
   left: -50px;
+  color: var(--light-btn-chat-notice);
   &::before {
     background-color: var(--light-bg-preview);
     bottom: -17px;
@@ -48,14 +49,15 @@
 }
 .item-wrapper {
   display: flex;
+  width: 100%;
   align-items: center;
-  padding: 11px 16px;
-  margin: 0px 3px 0px 4px;
+  padding: 12px 16px;
   position: relative;
-
+  
   &.item-caret-down {
+    display: block;
     padding: 0 16px;
-    justify-content: center;
+    margin: auto;
   }
 
   &:hover {

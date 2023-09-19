@@ -12,21 +12,20 @@ import {
   faPause,
 } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { InView, useInView } from 'react-intersection-observer';
+import { useInView } from 'react-intersection-observer';
 import { useClickAway } from 'react-use';
 import { useDispatch, useSelector } from 'react-redux';
-import { adjustVolume, muteVolume, setIndexVideoPlayed } from '~/redux/videoSlice';
+import { adjustVolume, muteVolume, updateInviewList } from '~/redux/videoSlice';
 import TiktokLoading from '~/components/Loadings/TiktokLoading';
 import { useLocalStorage } from '~/hooks';
 import TippyShare from '~/components/Tippy/TippyShare';
 
 const cx = classNames.bind(styles);
 
-function VideoContent({ data, index }) {
+function VideoContent({ data, index, indexInView, priorVideo, currentElement }) {
   const [playing, setPlaying] = useState(false);
   const [isLoadingVideo, setIsLoadingVideo] = useState(false);
   const [renderEvent, setRenderEvent] = useState(true);
-  const [isInViewPlayed, setIsInViewPlayed] = useState(false);
   const [userInteract, setUserInteract] = useState(false);
   const [timer, setTimer] = useState(0);
 
@@ -38,8 +37,7 @@ function VideoContent({ data, index }) {
 
   const frameRate = videoWidth - videoHeight > 0;
   const directionVideoClass = frameRate ? 'horizontal' : 'vertical';
-
-  const [inViewRef, isInView] = useInView({ root: null, threshold: frameRate ? 0.888 : 0.57 });
+  const [inViewRef, isInView] = useInView({ root: null, threshold: 0.57 });
 
   const videoRef = useRef(null);
   const adjustRef = useRef(null);
@@ -61,43 +59,22 @@ function VideoContent({ data, index }) {
   const dispatch = useDispatch();
   const muted = useSelector((state) => state.video.isMuted);
   const volume = useSelector((state) => state.video.defaultVolume);
-  const indexVideoPlayed = useSelector((state) => state.video.index);
 
-  useEffect(() => {
-    if (isInView) {
-      // if (!playing) {
-      videoRef.current.play();
-      setPlaying(true);
-      dispatch(setIndexVideoPlayed(index));
-      // }
-    } else {
-      if (playing) {
-        videoRef.current.pause();
-        videoRef.current.currentTime = 0;
-        setPlaying(false);
-      }
-    }
+  useLayoutEffect(() => {
+    handleUpdateInview(index, isInView);
+    isInView && currentElement(index);
   }, [isInView]);
 
   useEffect(() => {
-    if (indexVideoPlayed !== index) {
-      videoRef.current.pause();
-      if (playing) {
-        videoRef.current.currentTime = 0;
-        const currentTime = videoRef.current?.currentTime;
-        const duration = videoRef.current?.duration;
-        const currTime = convertTime(currentTime, ':');
-        const totalTime = convertTime(duration, ':');
-        handleControlVideo(currentTime, duration, currTime, totalTime);
-      }
-      setPlaying(false);
-      setIsInViewPlayed(false);
-    } else {
-      videoRef.current.play();
+    if (indexInView) {
       setPlaying(true);
-      setIsInViewPlayed(true);
+      videoRef.current.play();
+    } else {
+      setPlaying(false);
+      videoRef.current.load();
+      handleControlVideo(0, 1, 0, 1);
     }
-  }, [indexVideoPlayed]);
+  }, [indexInView]);
 
   useEffect(() => {
     const currentScrollPos = window.scrollY;
@@ -107,14 +84,21 @@ function VideoContent({ data, index }) {
       setUserInteract(false);
       if (newScrollPos > currentScrollPos) {
         //scroll down
-        if (playing) {
-          dispatch(setIndexVideoPlayed(index + 1));
+        if (isInView) {
+          // console.log(index);
+        } else {
+          handleUpdateInview(priorVideo, true);
+          handleUpdateInview(index, false);
         }
+        console.log('scroll down');
       } else {
         //scroll up
-        index > 0
-          ? dispatch(setIndexVideoPlayed(index - 1))
-          : index !== indexVideoPlayed && dispatch(setIndexVideoPlayed(index));
+        if (isInView) {
+          // console.log(index);
+        } else {
+          handleUpdateInview(priorVideo, true);
+          handleUpdateInview(index, false);
+        }
       }
     };
 
@@ -125,7 +109,7 @@ function VideoContent({ data, index }) {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInteract, playing]);
+  }, [userInteract]);
 
   useLayoutEffect(() => {
     const {
@@ -134,17 +118,6 @@ function VideoContent({ data, index }) {
     const totalTime = convertTime(playtime_seconds);
     timerRef.current.innerText = `00:00/${totalTime}`;
   }, []);
-
-  // useEffect(() => {
-  //   const currVolume = getLocalStorage('volume').value;
-  //   if (!currVolume) {
-  //     return;
-  //   } else {
-  //     adjustRef.current.value = currVolume;
-  //     videoRef.current.volume = currVolume / 100;
-  //     selectorRef.current.style.width = `${(currVolume / 100) * 46}px`;
-  //   }
-  // }, []);
 
   useLayoutEffect(() => {
     adjustRef.current.value = muted ? 0 : volume * 100;
@@ -169,6 +142,10 @@ function VideoContent({ data, index }) {
     setRenderEvent(true);
   });
 
+  const handleUpdateInview = (index, isInView) => {
+    dispatch(updateInviewList({ index: index, isInView: isInView }));
+  };
+
   const handlePlayVideo = () => {
     if (!playing) {
       videoRef.current.play();
@@ -181,8 +158,9 @@ function VideoContent({ data, index }) {
       }
       volumeControlRef.current.style.opacity = '0';
       setPlaying(true);
-      indexVideoPlayed !== index && dispatch(setIndexVideoPlayed(index));
-      if (!isInView) {
+      if (!indexInView) {
+        handleUpdateInview(priorVideo, false);
+        handleUpdateInview(index, true);
         setUserInteract(true);
       }
     }
@@ -241,19 +219,14 @@ function VideoContent({ data, index }) {
     }
     setRenderEvent(false);
   };
-  const handleEndedVideo = (e) => {
-    if (Math.floor(e.target.duration) === Math.floor(data.meta.playtime_seconds)) {
-      videoRef.current.play();
-    }
-  };
 
   const handleShowMenu = () => {
     volumeControlRef.current.style.opacity = '0';
     setRenderEvent(true);
   };
 
-  var convertTime = function (input, separator) {
-    var pad = function (input) {
+  const convertTime = function (input, separator) {
+    const pad = function (input) {
       return input < 10 ? '0' + input : input;
     };
     return [pad(Math.floor((input % 3600) / 60)), pad(Math.floor(input % 60))].join(
@@ -271,7 +244,7 @@ function VideoContent({ data, index }) {
   const handleUpdateTimer = (e) => {
     const { currentTime, duration } = e.target;
     const currTime = convertTime(currentTime, ':');
-    const totalTime = convertTime(duration, ':');
+    const totalTime = convertTime(isNaN(duration) ? data.meta.playtime_seconds : duration, ':');
     handleControlVideo(currentTime, duration, currTime, totalTime);
   };
 
@@ -288,8 +261,8 @@ function VideoContent({ data, index }) {
   const handleMouseOut = () => {
     volumeControlRef.current.style.opacity = '0';
   };
-
   const handleChangeTime = (e) => {
+    videoRef.current.pause();
     const currentTimeVideo = (e.target.value * videoRef.current.duration) / 100;
     timerTrackRef.current.style.width = `${Math.ceil((currentTimeVideo * 100) / videoRef.current.duration)}%`;
     videoRef.current.currentTime = currentTimeVideo;
@@ -304,7 +277,7 @@ function VideoContent({ data, index }) {
           [directionVideoClass]: directionVideoClass,
         })}
       >
-        {isInView || isInViewPlayed ? (
+        {indexInView ? (
           <img
             alt="thumb-video"
             src={data.thumb_url}
@@ -319,8 +292,10 @@ function VideoContent({ data, index }) {
           ref={videoRef}
           src={data.file_url}
           className={cx('video')}
-          onEnded={handleEndedVideo}
-          onTimeUpdate={(e) => handleUpdateTimer(e)}
+          preload="none"
+          // onEnded={handleEndedVideo}
+          loop
+          onTimeUpdate={handleUpdateTimer}
           onWaiting={handleWaitingVideo}
           onPlaying={handlePlayingVideo}
         ></video>
@@ -412,8 +387,9 @@ function VideoContent({ data, index }) {
               min="0"
               max="100"
               step="1"
-              value={timer}
+              value={isNaN(timer) ? 0 : timer}
               onInput={handleChangeTime}
+              onMouseUp={() => videoRef.current.play()}
             />
             <div className={cx('time-duration-track')} ref={timerTrackRef}></div>
           </div>

@@ -58,7 +58,7 @@ function SuggestAccounts({ seeAll, labelSuggested, sideBarRef }) {
       {isLoading ? (
         <AccountLoading />
       ) : (
-        suggestAccounts.slice(0, loadCount).map((account) => (
+        suggestAccounts?.slice(0, loadCount).map((account) => (
           <Link to={`/@${account.nickname}`} key={account.id}>
             <AccountItem data={account} label={labelSuggested} />
           </Link>
