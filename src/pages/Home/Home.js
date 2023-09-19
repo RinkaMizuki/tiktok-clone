@@ -34,7 +34,6 @@ function Home() {
 
   useEffect(() => {
     const priorVideo = indexInView.findIndex((item) => item.isInView);
-    console.log(indexInView);
     setPriority(priorVideo);
   }, [indexInView]);
 
@@ -73,16 +72,14 @@ function Home() {
   };
 
   useLayoutEffect(() => {
-    if (positionCurrentElement) {
-      if (positionCurrentElement > maxLength) {
-        setPositionCurrentElement(maxLength);
-      } else {
-        indexInView.forEach((video, index) => {
-          const isCurrentElm = index === positionCurrentElement;
-          isCurrentElm && dispatch(updateInviewList({ index, isInView: isCurrentElm }));
-        });
-        handleScrollElement(positionCurrentElement);
-      }
+    if (positionCurrentElement > maxLength) {
+      setPositionCurrentElement(maxLength);
+    } else {
+      indexInView.forEach((video, index) => {
+        const isCurrentElm = index === positionCurrentElement;
+        isCurrentElm && dispatch(updateInviewList({ index, isInView: isCurrentElm }));
+      });
+      handleScrollElement(positionCurrentElement);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,7 +96,6 @@ function Home() {
       block: 'center',
     });
   };
-
   const handleKeydown = (e) => {
     //pre
     const ARROW_UP = 38;
@@ -108,7 +104,7 @@ function Home() {
       e.preventDefault();
       setTimeout(() => {
         setPositionCurrentElement((prev) => {
-          dispatch(updateInviewList({ index: prev, isInView: false }));
+          prev !== 0 && dispatch(updateInviewList({ index: prev, isInView: false }));
           return prev <= 0 ? 0 : prev - 1;
         });
       }, 300);
@@ -126,7 +122,6 @@ function Home() {
   };
 
   const handleSetCurrentElement = useCallback((position) => {
-    console.log(position);
     setPositionCurrentElement(position);
   }, []);
 

@@ -71,8 +71,8 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement }) 
       videoRef.current.play();
     } else {
       setPlaying(false);
-      videoRef.current.load();
-      handleControlVideo(0, 1, 0, 1);
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
     }
   }, [indexInView]);
 
