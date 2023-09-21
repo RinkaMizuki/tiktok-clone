@@ -1,9 +1,7 @@
-import VideoInfo from './VideoInfo';
+import { VideoInfo, VideoContent } from '~/components/Videos';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 // import { collection, getDocs } from 'firebase/firestore';
 // import { db } from '~/firebase';
-// import UploadVideoInfo from './UploadVideoInfo';
-// import UploadVideo from './UploadVideo/UploadVideo';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
 import { videoService } from '~/services/videoService';
@@ -88,6 +86,7 @@ function Home() {
   useEffect(() => {
     document.addEventListener('keydown', handleKeydown);
     return () => document.removeEventListener('keydown', handleKeydown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleScrollElement = (position) => {
@@ -133,14 +132,16 @@ function Home() {
       <div ref={wrapperRef}>
         {videos.map((video, index) => {
           return (
-            <VideoInfo
-              key={video.id}
-              data={video}
-              index={index}
-              priorVideo={priority}
-              indexInView={index === priority && indexInView[index]?.isInView}
-              currentElement={handleSetCurrentElement}
-            />
+            <div className={cx('content')} key={video.id}>
+              <VideoInfo data={video} />
+              <VideoContent
+                data={video}
+                index={index}
+                priorVideo={priority}
+                indexInView={index === priority && indexInView[index]?.isInView}
+                currentElement={handleSetCurrentElement}
+              />
+            </div>
           );
         })}
       </div>

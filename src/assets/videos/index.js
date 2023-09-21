@@ -1,4 +1,4 @@
 const video = {
-  video: require('~/assets/videos/rinka.mp4'),
+  rinka: require('~/assets/videos/rinka.mp4'),
 };
 export default video;

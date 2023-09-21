@@ -1,9 +1,12 @@
 .wrapper {
   max-width: 692px;
   padding: 24px 16px;
-
 }
-
+.content {
+  padding: 20px 0px;
+  min-width: 624px;
+  border-bottom: 1px solid var(--light-line-search);
+}
 .auto-load-more {
   display: flex;
   justify-content: center;

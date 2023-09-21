@@ -1,10 +1,10 @@
 import classNames from 'classnames/bind';
 import styles from './VideoPreview.module.scss';
-import Image from '../Images/Images';
+import Image from '../../Images/Images';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIdVideoPlay } from '~/redux/videoSlice';
-import TiktokLoading from '../Loadings/TiktokLoading';
+import TiktokLoading from '../../Loadings/TiktokLoading';
 
 const cx = classNames.bind(styles);
 

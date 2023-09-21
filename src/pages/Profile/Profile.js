@@ -14,7 +14,7 @@ import ProfileLoading from '~/components/Loadings/ProfileLoading';
 import { useSelector } from 'react-redux';
 import Follow from '~/components/Follow';
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
-import VideoPreview from '~/components/VideoPreview';
+import { VideoPreview } from '~/components/Videos';
 
 const cx = classNames.bind(styles);
 

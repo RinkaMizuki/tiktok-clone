@@ -7,11 +7,11 @@ import Button from '~/components/Button/Button';
 import ScrollTop from './ScrollGoToTop';
 import { useRef } from 'react';
 import { CancelIcon, PhoneIcon, TvIcon } from '~/components/Icons';
+import VideoModal from '~/components/Videos/VideoModal';
 
 const cx = classNames.bind(styles);
 
 function DefaultLayout({ children }) {
-
   const btnRef = useRef();
   const contentRef = useRef();
   const divRef = useRef();
@@ -22,13 +22,13 @@ function DefaultLayout({ children }) {
     divRef.current.classList.add(cx('show'));
     btnGetRef.current.classList.remove(cx('show'));
     btnGetRef.current.classList.add(cx('hide'));
-  }
+  };
   const handleHideGetApp = () => {
     divRef.current.classList.remove(cx('show'));
     divRef.current.classList.add(cx('hide'));
     btnGetRef.current.classList.remove(cx('hide'));
     btnGetRef.current.classList.add(cx('show'));
-  }
+  };
 
   return (
     <div className={cx('wrapper')}>
@@ -42,31 +42,43 @@ function DefaultLayout({ children }) {
           <Button refBtn={btnGetRef} rounded className={cx('btn-get-app')} onClick={handleClickGetApp}>
             Get app
           </Button>
-          <div className={cx('expand-container', {
-            'hide': 'hide',
-          })} ref={divRef}>
+          <div
+            className={cx('expand-container', {
+              hide: 'hide',
+            })}
+            ref={divRef}
+          >
             <div className={cx('xmark-wrapper')} onClick={handleHideGetApp}>
               <CancelIcon className={cx('btn-dark')} />
             </div>
             <div className={cx('expand-wrapper')}>
               <div className={cx('item-container')}>
                 <TvIcon className={cx('btn-dark')} />
-                <span className={cx('btn-dark', {
-                  'span-text': 'span-text',
-                })}>Get TikTok for desktop</span>
+                <span
+                  className={cx('btn-dark', {
+                    'span-text': 'span-text',
+                  })}
+                >
+                  Get TikTok for desktop
+                </span>
               </div>
               <div className={cx('split')}></div>
               <div className={cx('item-container')}>
                 <PhoneIcon className={cx('btn-dark')} />
-                <span className={cx('btn-dark', {
-                  'span-text': 'span-text',
-                })}>Get TikTok App</span>
+                <span
+                  className={cx('btn-dark', {
+                    'span-text': 'span-text',
+                  })}
+                >
+                  Get TikTok App
+                </span>
               </div>
             </div>
           </div>
           <ScrollTop ref={{ btnRef, contentRef }} />
         </div>
       </div>
+      <VideoModal />
     </div>
   );
 }
