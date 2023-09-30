@@ -7,15 +7,18 @@ import Button from '~/components/Button/Button';
 import ScrollTop from './ScrollGoToTop';
 import { useRef } from 'react';
 import { CancelIcon, PhoneIcon, TvIcon } from '~/components/Icons';
-import VideoModal from '~/components/Videos/VideoModal';
+import VideoModal from '~/components/Modal/VideoModal';
+import { VideoContext } from '~/context/VideoContext';
+import { useContext } from 'react';
 
 const cx = classNames.bind(styles);
 
 function DefaultLayout({ children }) {
   const btnRef = useRef();
-  const contentRef = useRef();
   const divRef = useRef();
   const btnGetRef = useRef();
+
+  const { isShowVideoModal, handleHideVideoModal } = useContext(VideoContext);
 
   const handleClickGetApp = () => {
     divRef.current.classList.remove(cx('hide'));
@@ -35,9 +38,7 @@ function DefaultLayout({ children }) {
       <Header />
       <div className={cx('container')}>
         <SideBar />
-        <div className={cx('content')} ref={contentRef}>
-          {children}
-        </div>
+        <div className={cx('content')}>{children}</div>
         <div ref={btnRef} className={cx('container-button')}>
           <Button refBtn={btnGetRef} rounded className={cx('btn-get-app')} onClick={handleClickGetApp}>
             Get app
@@ -75,10 +76,10 @@ function DefaultLayout({ children }) {
               </div>
             </div>
           </div>
-          <ScrollTop ref={{ btnRef, contentRef }} />
+          <ScrollTop ref={{ btnRef }} />
         </div>
       </div>
-      <VideoModal />
+      {isShowVideoModal && <VideoModal onHideModal={handleHideVideoModal} />}
     </div>
   );
 }

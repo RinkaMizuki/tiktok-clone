@@ -14,6 +14,7 @@ import {
   Telegram,
   Twitter,
   WhatsApp,
+  Reddit,
 } from '~/components/Icons';
 import { useEffect, useRef, useState } from 'react';
 
@@ -65,9 +66,37 @@ export const listMediaSocial = [
   },
 ];
 
-const TippyShare = ({ children, delay, interactive = false, zIndex, placement, className }) => {
+const listMediaSocialModal = [
+  {
+    icon: <LinkedIn />,
+    desc: 'Share to LinkedIn',
+  },
+  {
+    icon: <Reddit />,
+    desc: 'Share to Reddit',
+  },
+  {
+    icon: <Telegram />,
+    desc: 'Share to Telegram',
+  },
+  {
+    icon: <Email />,
+    desc: 'Share to Email',
+  },
+  {
+    icon: <Line />,
+    desc: 'Share to Line',
+  },
+  {
+    icon: <Pinterest />,
+    desc: 'Share to Pinterest',
+  },
+];
+
+const TippyShare = ({ children, delay, interactive = false, zIndex, placement, className, isShowLess = false }) => {
   const [itemList, setItemList] = useState(false);
   const loadListItem = itemList ? listMediaSocial.length : 5;
+
   const caretRef = useRef();
   const handleHideTippy = () => {
     setItemList(false);
@@ -92,23 +121,25 @@ const TippyShare = ({ children, delay, interactive = false, zIndex, placement, c
       popperOptions={{ modifiers: [{ name: 'flip', enabled: false }] }}
       onHide={handleHideTippy}
       render={(attrs) => (
-        <div {...attrs} tabIndex="-1" className={cx('tippy-container', className)}>
+        <div {...attrs} tabIndex="-1" className={cx({ 'tippy-container': !isShowLess }, className)}>
           <div className={cx('share-wrapper')}>
-            {listMediaSocial.slice(0, loadListItem).map((item, index) => (
+            {(!isShowLess ? listMediaSocial.slice(0, loadListItem) : listMediaSocialModal).map((item, index) => (
               <button key={index} className={cx('item-wrapper')}>
                 {item.icon}
                 <span className={cx('item-text')}>{item.desc}</span>
               </button>
             ))}
-            <button
-              ref={caretRef}
-              className={cx('item-wrapper', {
-                'item-caret-down': 'item-caret-down',
-              })}
-              onClick={handleShowItem}
-            >
-              {itemList ? null : <CaretDownSmall />}
-            </button>
+            {!isShowLess && (
+              <button
+                ref={caretRef}
+                className={cx('item-wrapper', {
+                  'item-caret-down': 'item-caret-down',
+                })}
+                onClick={handleShowItem}
+              >
+                {itemList ? null : <CaretDownSmall />}
+              </button>
+            )}
           </div>
         </div>
       )}

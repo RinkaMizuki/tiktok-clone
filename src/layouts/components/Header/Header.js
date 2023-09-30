@@ -25,7 +25,7 @@ import Search from '../Search';
 import { Link } from 'react-router-dom';
 import config from '~/config';
 import { useContext } from 'react';
-import { ModuleContext } from '~/context/ModalContext';
+import { ModalContext } from '~/context/ModalContext';
 import { useLocalStorage } from '~/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -157,7 +157,7 @@ function Header() {
   //set state
   const { user } = UserAuth();
   const { getLocalStorage } = useLocalStorage();
-  const { handleShowModalForm } = useContext(ModuleContext);
+  const { handleShowModalForm } = useContext(ModalContext);
   const navigate = useNavigate();
 
   const { auth } = getLocalStorage('persist:root');

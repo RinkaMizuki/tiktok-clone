@@ -3,19 +3,18 @@ import styles from './VideoInfo.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button/Button';
-import VideoContent from '../VideoContent';
 import { Wrapper as WrapperPopper } from '~/components/Popper';
 import Image from '~/components/Images';
 import Tippy from '@tippyjs/react/headless';
 import Follow from '~/components/Follow';
 import { useSelector } from 'react-redux';
 import { useContext } from 'react';
-import { ModuleContext } from '~/context/ModalContext';
+import { ModalContext } from '~/context/ModalContext';
 
 const cx = classNames.bind(styles);
 
 function VideoInfo({ data }) {
-  const { handleShowModalForm } = useContext(ModuleContext);
+  const { handleShowModalForm } = useContext(ModalContext);
   const isLogin = useSelector((state) => state.auth.login.isLogin);
   return (
     <div className={cx('container')}>
@@ -67,7 +66,7 @@ function VideoInfo({ data }) {
         </div>
         <div className={cx('music')}>
           <FontAwesomeIcon className={cx('icon-music')} icon={faMusic} />
-          <a href="#">{data.music}</a>
+          <span className={cx('text-music')}>{data.music}</span>
         </div>
       </div>
       <div className={cx('btn-follow')}>

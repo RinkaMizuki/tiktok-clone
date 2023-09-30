@@ -5,7 +5,9 @@ export const videoSlice = createSlice({
   initialState: {
     defaultVolume: 0.5,
     isMuted: true,
-    id: '',
+    videoId: '',
+    userId: '',
+    nicknameUser: '',
     index: [],
   },
   reducers: {
@@ -16,7 +18,13 @@ export const videoSlice = createSlice({
       state.isMuted = action.payload;
     },
     setIdVideoPlay: (state, action) => {
-      state.id = action.payload;
+      state.videoId = action.payload;
+    },
+    setIdUserListVideo: (state, action) => {
+      state.userId = action.payload;
+    },
+    setNickNameUser: (state, action) => {
+      state.nicknameUser = action.payload;
     },
     updateInviewList: (state, action) => {
       const cloneIndexArr = [...state.index];
@@ -26,6 +34,13 @@ export const videoSlice = createSlice({
   },
 });
 
-export const { adjustVolume, muteVolume, setIdVideoPlay, setStateIndexView, updateInviewList } =
-  videoSlice.actions;
+export const {
+  adjustVolume,
+  muteVolume,
+  setIdVideoPlay,
+  setIdUserListVideo,
+  setStateIndexView,
+  setNickNameUser,
+  updateInviewList,
+} = videoSlice.actions;
 export default videoSlice.reducer;

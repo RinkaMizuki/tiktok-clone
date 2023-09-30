@@ -10,7 +10,7 @@ import AboutInfo from '~/components/AboutInfo/AboutInfo';
 import { UserAuth } from '~/context/AuthContext';
 import { useLocalStorage } from '~/hooks';
 import { useContext } from 'react';
-import { ModuleContext } from '~/context/ModalContext';
+import { ModalContext } from '~/context/ModalContext';
 
 import FollowAccounts from '~/components/FollowAccounts/FollowAccouts';
 import { useRef } from 'react';
@@ -23,7 +23,7 @@ function SideBar() {
   const { auth } = getLocalStorage('persist:root');
   const data = auth && JSON.parse(auth);
   const sideBarRef = useRef(null);
-  const { handleShowModalForm } = useContext(ModuleContext);
+  const { handleShowModalForm } = useContext(ModalContext);
   return (
     <aside className={cx('wrapper')} ref={sideBarRef}>
       <Menu>

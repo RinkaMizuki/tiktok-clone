@@ -1,6 +1,8 @@
 import classNames from 'classnames/bind';
 import styles from './VideoContent.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useContext } from 'react';
+import { VideoContext } from '~/context/VideoContext';
 import {
   faComment,
   faHeart,
@@ -15,54 +17,71 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useClickAway } from 'react-use';
 import { useDispatch, useSelector } from 'react-redux';
-import { adjustVolume, muteVolume, updateInviewList } from '~/redux/videoSlice';
+import { setIdUserListVideo, setIdVideoPlay, setNickNameUser, updateInviewList } from '~/redux/videoSlice';
+import { useControl } from '~/hooks';
 import TiktokLoading from '~/components/Loadings/TiktokLoading';
-import { useLocalStorage } from '~/hooks';
 import TippyShare from '~/components/Tippy/TippyShare';
 
 const cx = classNames.bind(styles);
 
-function VideoContent({ data, index, indexInView, priorVideo, currentElement }) {
+function VideoContent({ data, index, indexInView, priorVideo, currentElement: setCurrentElement }) {
   const [playing, setPlaying] = useState(false);
-  const [isLoadingVideo, setIsLoadingVideo] = useState(false);
-  const [renderEvent, setRenderEvent] = useState(true);
   const [userInteract, setUserInteract] = useState(false);
-  const [timer, setTimer] = useState(0);
 
   const {
     meta: {
+      playtime_seconds,
       video: { resolution_x: videoWidth, resolution_y: videoHeight },
     },
+    user: { id: userId, nickname: nicknameUser },
+    id: videoId,
   } = data;
 
   const frameRate = videoWidth - videoHeight > 0;
   const directionVideoClass = frameRate ? 'horizontal' : 'vertical';
   const [inViewRef, isInView] = useInView({ root: null, threshold: 0.57 });
 
-  const videoRef = useRef(null);
-  const adjustRef = useRef(null);
-  const selectorRef = useRef(null);
-  const timerRef = useRef(null);
-  const timerTrackRef = useRef(null);
-  const timerCircleRef = useRef(null);
-  const playRef = useRef(null);
-  const pauseRef = useRef(null);
-  const menuRef = useRef(null);
-  const volumeControlRef = useRef(null);
-  const volumeHighRef = useRef(null);
-  const volumeMutedRef = useRef(null);
+  const { handleShowVideoModal: onShowModal } = useContext(VideoContext);
+  //refs
   const videoContainerRef = useRef(null);
-  const volumeContainer = useRef(null);
 
-  const { setLocalStorage } = useLocalStorage();
+  //custom hooks
+  const {
+    handleAdjustVolume,
+    handleMutedVideo,
+    handleSetFinalVolume,
+    handleMouseInto,
+    handleMouseOut,
+    setRenderEvent,
+    handleUpdateTimer,
+    handleChangeTime,
+    handleWaitingVideo,
+    handlePlayingVideo,
+    renderEvent,
+    playRef,
+    pauseRef,
+    videoRef,
+    volumeControlRef,
+    adjustRef,
+    selectorRef,
+    menuRef,
+    volumeHighRef,
+    volumeMutedRef,
+    volumeBarRef,
+    timerRef,
+    timerTrackRef,
+    timerCircleRef,
+    timer,
+    isLoadingVideo,
+  } = useControl(playtime_seconds);
 
+  // //action redux
   const dispatch = useDispatch();
   const muted = useSelector((state) => state.video.isMuted);
-  const volume = useSelector((state) => state.video.defaultVolume);
 
   useLayoutEffect(() => {
     handleUpdateInview(index, isInView);
-    isInView && currentElement(index);
+    isInView && setCurrentElement(index);
   }, [isInView]);
 
   useEffect(() => {
@@ -73,6 +92,7 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement }) 
       setPlaying(false);
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
+      timerTrackRef.current.style.width = '0px';
     }
   }, [indexInView]);
 
@@ -110,20 +130,6 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement }) 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInteract]);
-
-  useLayoutEffect(() => {
-    const {
-      meta: { playtime_seconds },
-    } = data;
-    const totalTime = convertTime(playtime_seconds);
-    timerRef.current.innerText = `00:00/${totalTime}`;
-  }, []);
-
-  useLayoutEffect(() => {
-    adjustRef.current.value = muted ? 0 : volume * 100;
-    videoRef.current.volume = muted ? 0 : volume;
-    selectorRef.current.style.width = `${muted ? 0 : volume * 46}px`;
-  }, [muted, volume]);
 
   useClickAway(videoContainerRef, () => {
     //when click outside of video
@@ -183,90 +189,16 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement }) 
     }
   };
 
-  const handleAdjustVolume = (value) => {
-    const rangeVolume = value / 100;
-    videoRef.current.volume = rangeVolume;
-    selectorRef.current.style.width = `${rangeVolume * 45}px`;
-    dispatch(muteVolume(!rangeVolume > 0));
-    dispatch(adjustVolume(rangeVolume));
-    if (pauseRef.current) {
-      pauseRef.current.style.opacity = '0';
-    } else if (playRef.current) {
-      playRef.current.style.opacity = '0';
-    }
-    menuRef.current.style.opacity = '0';
-  };
-
-  const handleSetFinalVolume = (value) => {
-    dispatch(adjustVolume(value / 100));
-    setLocalStorage('volume', { value });
-  };
-
-  const handleMutedVideo = () => {
-    dispatch(adjustVolume(volume === 0 ? 0.5 : volume));
-    dispatch(muteVolume(!muted));
-    if (pauseRef.current) {
-      pauseRef.current.style.opacity = '1';
-    } else if (playRef.current) {
-      playRef.current.style.opacity = '1';
-    }
-    menuRef.current.style.opacity = '1';
-    volumeControlRef.current.style.opacity = '1';
-    if (volumeHighRef.current) {
-      volumeHighRef.current.style.opacity = '1';
-    } else if (volumeMutedRef.current) {
-      volumeMutedRef.current.style.opacity = '1';
-    }
-    setRenderEvent(false);
-  };
-
   const handleShowMenu = () => {
     volumeControlRef.current.style.opacity = '0';
     setRenderEvent(true);
   };
 
-  const convertTime = function (input, separator) {
-    const pad = function (input) {
-      return input < 10 ? '0' + input : input;
-    };
-    return [pad(Math.floor((input % 3600) / 60)), pad(Math.floor(input % 60))].join(
-      typeof separator !== 'undefined' ? separator : ':',
-    );
-  };
-
-  function handleControlVideo(currentTime, duration, currTime, totalTime) {
-    timerTrackRef.current.style.width = `${Math.ceil((currentTime / duration) * 100)}%`;
-    timerCircleRef.current.value = Math.ceil((currentTime * 100) / duration);
-    timerRef.current.innerText = `${currTime}/${totalTime}`;
-    setTimer(Math.ceil((currentTime * 100) / duration));
-  }
-
-  const handleUpdateTimer = (e) => {
-    const { currentTime, duration } = e.target;
-    const currTime = convertTime(currentTime, ':');
-    const totalTime = convertTime(isNaN(duration) ? data.meta.playtime_seconds : duration, ':');
-    handleControlVideo(currentTime, duration, currTime, totalTime);
-  };
-
-  const handleWaitingVideo = () => {
-    setIsLoadingVideo(true);
-  };
-  const handlePlayingVideo = () => {
-    setIsLoadingVideo(false);
-  };
-
-  const handleMouseInto = () => {
-    volumeControlRef.current.style.opacity = '1';
-  };
-  const handleMouseOut = () => {
-    volumeControlRef.current.style.opacity = '0';
-  };
-  const handleChangeTime = (e) => {
-    videoRef.current.pause();
-    const currentTimeVideo = (e.target.value * videoRef.current.duration) / 100;
-    timerTrackRef.current.style.width = `${Math.ceil((currentTimeVideo * 100) / videoRef.current.duration)}%`;
-    videoRef.current.currentTime = currentTimeVideo;
-    setTimer(e.target.value);
+  const handleShowVideoModal = () => {
+    dispatch(setIdUserListVideo(userId));
+    dispatch(setIdVideoPlay(videoId));
+    dispatch(setNickNameUser(nicknameUser));
+    onShowModal();
   };
 
   return (
@@ -292,12 +224,11 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement }) 
           ref={videoRef}
           src={data.file_url}
           className={cx('video')}
-          preload="none"
-          // onEnded={handleEndedVideo}
           loop
           onTimeUpdate={handleUpdateTimer}
           onWaiting={handleWaitingVideo}
           onPlaying={handlePlayingVideo}
+          onClick={handleShowVideoModal}
         ></video>
         {isLoadingVideo && (
           <div className={cx('position')}>
@@ -337,12 +268,11 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement }) 
           })}
         >
           <div
-            ref={volumeContainer}
             onMouseEnter={renderEvent ? handleMouseInto : () => {}}
             onMouseLeave={renderEvent ? handleMouseOut : () => {}}
           >
             <div ref={volumeControlRef} className={cx('volume-control')}>
-              <div className={cx('volume-bar')}>
+              <div className={cx('volume-bar')} ref={volumeBarRef}>
                 <input
                   className={cx('input')}
                   type="range"

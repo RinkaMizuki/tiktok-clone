@@ -13,6 +13,9 @@
   margin-left: 10px;
   padding: 32px 24px;
   width: 100%;
+  height: 100vh;
+  background-color: var(--white-content);
+  transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
 }
 .info-user {
   margin-bottom: 20px;
@@ -22,7 +25,7 @@
 }
 .wrapper-info {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
 }
 .avatar {
   max-width: 116px;
@@ -73,7 +76,7 @@
 }
 .wrapper-username {
   display: flex;
-  align-self: start;
+  align-self: flex-start;
 }
 .nickname {
   font-family: TikTokFont, sans-serif;
@@ -120,7 +123,7 @@
 }
 
 .url-container {
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   color: var(--light-btn-chat-notice);
   display: flex;

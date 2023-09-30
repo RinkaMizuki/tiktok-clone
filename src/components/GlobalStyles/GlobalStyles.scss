@@ -284,10 +284,10 @@ html::-webkit-scrollbar-thumb {
 
 html body {
   overflow-y: overlay;
+  overflow-x: hidden;
 }
 
 body {
-  overflow-x: hidden;
   font-family: var(--font-family);
   line-height: 1.5;
   text-rendering: optimizeSpeed;

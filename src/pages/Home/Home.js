@@ -95,7 +95,9 @@ function Home() {
       block: 'center',
     });
   };
+
   const handleKeydown = (e) => {
+    console.log(123);
     //pre
     const ARROW_UP = 38;
     const ARROW_DOWN = 40;

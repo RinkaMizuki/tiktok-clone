@@ -2,16 +2,16 @@ import classNames from 'classnames/bind';
 import styles from './ScrollGoToTop.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faForwardStep } from '@fortawesome/free-solid-svg-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
 function ScrollTop({}, ref) {
-  const { btnRef, contentRef } = ref;
+  const { btnRef } = ref;
   // Top: 0 takes us all the way back to the top of the page
   // Behavior: smooth keeps it smooth!
   const scrollToTop = () => {
-    contentRef.current.scrollTo({
+    window.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
@@ -19,26 +19,19 @@ function ScrollTop({}, ref) {
 
   useEffect(() => {
     // Button is displayed after scrolling for 10 pixels
-    const content = contentRef.current;
     const toggleVisibility = () => {
-      if (content.scrollTop > 10) {
+      if (window.scrollY > 25) {
         btnRef.current.classList.remove(cx('hide'));
         btnRef.current.classList.add(cx('show'));
-
-        // btnRef.current.style.transform = 'none';
-        // btnRef.current.style.transition = 'all 400ms cubic-bezier(0.65, 0, 0.35, 1) 0s';
       } else {
         btnRef.current.classList.remove(cx('show'));
         btnRef.current.classList.add(cx('hide'));
-
-        // btnRef.current.style.transform = 'translateY(40px)';
-        // btnRef.current.style.transition = 'all 400ms cubic-bezier(0.65, 0, 0.35, 1) 0s';
       }
     };
 
-    content.addEventListener('scroll', toggleVisibility);
+    window.addEventListener('scroll', toggleVisibility);
 
-    return () => content.removeEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
   return (

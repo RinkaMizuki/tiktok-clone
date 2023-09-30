@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   background-color: var(--white-content);
-  transition: all .4s cubic-bezier(.65,0,.35,1);
+  transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .container {
@@ -22,6 +22,8 @@
   flex-direction: column;
   align-items: center;
   margin-left: 230px;
+  background-color: var(--white-content);
+  transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .container-button {

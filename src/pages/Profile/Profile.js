@@ -5,7 +5,7 @@ import { faCheckCircle, faLink, faLock, faPenToSquare } from '@fortawesome/free-
 import { useEffect, useRef, useState } from 'react';
 import { ShareIcon, UserUndefine } from '~/components/Icons';
 import TippyShare from '~/components/Tippy/TippyShare';
-import { ModuleContext } from '~/context/ModalContext';
+import { ModalContext } from '~/context/ModalContext';
 import { useContext } from 'react';
 import { getCurrentProfileUser } from '~/services/userService';
 import { useLocation } from 'react-router-dom';
@@ -26,11 +26,12 @@ const Profile = () => {
   const [urlList, setUrlList] = useState([]);
   const [tab, setTab] = useState('VIDEOS');
   const { pathname } = useLocation();
-  const { handleShowModalForm, handleShowModelProfile } = useContext(ModuleContext);
+  const { handleShowModalForm, handleShowModelProfile } = useContext(ModalContext);
   const lineRef = useRef(null);
   const postRef = useRef(null);
   const favoritesRef = useRef(null);
   const likedRef = useRef(null);
+  const profileRef = useRef(null);
   const userId = useSelector((state) => state.auth.login?.currentUser?.id);
   const isLogin = useSelector((state) => state.auth.login.isLogin);
 
@@ -41,9 +42,17 @@ const Profile = () => {
       setCurrentUser({ ...res.data });
       setUrlList([res.data.facebook_url, res.data.twitter_url, res.data.youtube_url, res.data.website_url]);
       setIsloading(false);
+      handleSetHeightProfile();
     };
     fetchDataCurrUser();
   }, [pathname]);
+
+  const handleSetHeightProfile = () => {
+    if (profileRef.current) {
+      profileRef.current.style.height = 'auto';
+    }
+  };
+
   const handleMouseOverVideos = () => {
     lineRef.current.style.width = '128px';
     lineRef.current.style.transform = 'translateX(0)';
@@ -121,7 +130,7 @@ const Profile = () => {
     }
   };
   return (
-    <div className={cx('profile')}>
+    <div className={cx('profile')} ref={profileRef}>
       {isLoading ? (
         <ProfileLoading />
       ) : (

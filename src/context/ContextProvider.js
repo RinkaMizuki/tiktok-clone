@@ -1,9 +1,12 @@
-import ModalContextProvider from "./ModalContext";
+import ModalContextProvider from './ModalContext';
+import VideoContextProvider from './VideoContext';
 
 function ContextProvider({ children }) {
-    return (
-        <ModalContextProvider>{children}</ModalContextProvider>
-    )
+  return (
+    <ModalContextProvider>
+      <VideoContextProvider>{children}</VideoContextProvider>
+    </ModalContextProvider>
+  );
 }
 
 export default ContextProvider;

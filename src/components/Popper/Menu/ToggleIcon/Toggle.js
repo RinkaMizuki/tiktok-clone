@@ -6,16 +6,13 @@ const cx = classNames.bind(styles);
 
 function Toggle() {
   const setDark = () => {
-    // console.log("dark");
     localStorage.setItem('theme', 'dark');
     document.documentElement.setAttribute('data-theme', 'dark');
     inputRef.current.setAttribute('checked', 'checked');
   };
   const setLight = () => {
-    // console.log("light");
     localStorage.setItem('theme', 'light');
     document.documentElement.setAttribute('data-theme', 'light');
-    // inputRef.current.setAttribute("checked","false");
   };
 
   const inputRef = useRef();
@@ -38,15 +35,7 @@ function Toggle() {
 
   return (
     <>
-      <input
-        ref={inputRef}
-        type="checkbox"
-        id="switch"
-        className={cx('switch-input')}
-        onInput={(e) => {
-          toggleTheme(e);
-        }}
-      />
+      <input ref={inputRef} type="checkbox" id="switch" className={cx('switch-input')} onInput={toggleTheme} />
       <label htmlFor="switch" className={cx('switch')}></label>
     </>
   );
