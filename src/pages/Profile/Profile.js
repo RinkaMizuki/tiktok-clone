@@ -11,10 +11,11 @@ import { getCurrentProfileUser } from '~/services/userService';
 import { useLocation } from 'react-router-dom';
 import Image from '~/components/Images/Images';
 import ProfileLoading from '~/components/Loadings/ProfileLoading';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Follow from '~/components/Follow';
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { VideoPreview } from '~/components/Videos';
+import { setCurrentListVideo } from '~/redux/videoSlice';
 
 const cx = classNames.bind(styles);
 
@@ -31,27 +32,22 @@ const Profile = () => {
   const postRef = useRef(null);
   const favoritesRef = useRef(null);
   const likedRef = useRef(null);
-  const profileRef = useRef(null);
   const userId = useSelector((state) => state.auth.login?.currentUser?.id);
   const isLogin = useSelector((state) => state.auth.login.isLogin);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchDataCurrUser = async () => {
       setIsloading(true);
       const res = await getCurrentProfileUser(pathname);
       setCurrentUser({ ...res.data });
+      dispatch(setCurrentListVideo(res.data.videos));
       setUrlList([res.data.facebook_url, res.data.twitter_url, res.data.youtube_url, res.data.website_url]);
       setIsloading(false);
-      handleSetHeightProfile();
     };
     fetchDataCurrUser();
   }, [pathname]);
-
-  const handleSetHeightProfile = () => {
-    if (profileRef.current) {
-      profileRef.current.style.height = 'auto';
-    }
-  };
 
   const handleMouseOverVideos = () => {
     lineRef.current.style.width = '128px';
@@ -130,7 +126,7 @@ const Profile = () => {
     }
   };
   return (
-    <div className={cx('profile')} ref={profileRef}>
+    <div className={cx('profile')}>
       {isLoading ? (
         <ProfileLoading />
       ) : (
@@ -257,8 +253,8 @@ const Profile = () => {
                   </main>
                 ) : (
                   <div className={cx('video-preview')}>
-                    {currentUser?.videos?.map((video) => (
-                      <VideoPreview video={video} key={video.id} />
+                    {currentUser?.videos?.map((video, index) => (
+                      <VideoPreview video={video}  indexVideo={index} key={video.id}/>
                     ))}
                   </div>
                 );

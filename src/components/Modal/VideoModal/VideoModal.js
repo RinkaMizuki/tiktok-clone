@@ -31,18 +31,25 @@ import { getListVideoOfUser, getVideo } from '~/services/videoService';
 import Image from '~/components/Images/Images';
 import { getListComment } from '~/services/commentService';
 import { ModalContext } from '~/context/ModalContext';
-import { setIdVideoPlay } from '~/redux/videoSlice';
-
+import { setCurrentListVideo, setInfoCurrentVideo, setListenEvent } from '~/redux/videoSlice';
+import { Link } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 const VideoModal = ({ onHideModal }) => {
+  const videoListPage = useSelector((state) => state.video.videoListPage);
+
   const [isPlaying, setIsPlaying] = useState(true);
   const [video, setVideo] = useState({});
   const [listComment, setListComment] = useState([]);
-  const [videoListUser, setVideoListUser] = useState([]);
-  const [indexVideoOfUser, setIndexVideoOfUser] = useState(-1);
+  const [videoListOfUser, setVideoListOfUser] = useState([]);
+  const [historyVideo, setHistoryVideo] = useState({
+    videoCurrent: {},
+    listVideo: [],
+    status: false,
+    indexVideo: null,
+  });
+  const [positionCurrentElement, setPositionCurrentElement] = useState(0);
   const [copyLink, setCopyLink] = useState('');
-
   const [active, setActive] = useState('comment');
   const [urlOrigin, setUrlOrigin] = useState('/');
 
@@ -52,9 +59,9 @@ const VideoModal = ({ onHideModal }) => {
   const tabVideoContainerRef = useRef(null);
   const tabVideoRef = useRef(null);
   const tabCommentRef = useRef(null);
-  const wrapperRef = useRef(null);
   const linkRef = useRef(null);
   const menuRef = useRef(null);
+  const wrapperRef = useRef(null);
 
   const initialStyles = { opacity: 0 };
   const [props, setSpring] = useSpring(() => initialStyles);
@@ -62,10 +69,10 @@ const VideoModal = ({ onHideModal }) => {
   const dispatch = useDispatch();
 
   const muted = useSelector((state) => state.video.isMuted);
-  const videoId = useSelector((state) => state.video.videoId);
-  const nicknameCurrUser = useSelector((state) => state.video.nicknameUser);
-  const userId = useSelector((state) => state.video.userId);
+
+  const { videoId, userId, nicknameUser, indexVideo } = useSelector((state) => state.video.infoCurrentVideo);
   const isLogin = useSelector((state) => state.auth.login.isLogin);
+  const listenEvent = useSelector((state) => state.video.listenEvent);
 
   const { handleShowModalForm: onShowModalFormLogin } = useContext(ModalContext);
 
@@ -101,20 +108,20 @@ const VideoModal = ({ onHideModal }) => {
   }, [isPlaying]);
 
   useEffect(() => {
-    if (window.location.pathname.includes(`/@${nicknameCurrUser}`)) {
+    if (window.location.pathname.includes(`/@${nicknameUser}`)) {
       //profile
       const currPathname = window.location.pathname;
-      if (currPathname !== `/@${nicknameCurrUser}/video/${videoId}` && currPathname !== `/@${nicknameCurrUser}`) {
-        window.history.replaceState(null, '', `/@${nicknameCurrUser}/video/${videoId}`);
+      if (currPathname !== `/@${nicknameUser}/video/${videoId}` && currPathname !== `/@${nicknameUser}`) {
+        window.history.replaceState(null, '', `/@${nicknameUser}/video/${videoId}`);
       } else {
         //first modal
-        window.history.pushState({}, null, `${currPathname}/video/${videoId}`);
+        window.history.pushState(null, '', `${currPathname}/video/${historyVideo.videoCurrent.id || videoId}`);
       }
     } else {
       //home
-      window.history.pushState({}, null, `@${nicknameCurrUser}/video/${videoId}`);
+      window.history.pushState(null, '', `/@${nicknameUser}/video/${videoId}`);
     }
-  }, [videoId, nicknameCurrUser]);
+  }, [videoId, nicknameUser]);
 
   useLayoutEffect(() => {
     setIsLoading(true);
@@ -125,21 +132,25 @@ const VideoModal = ({ onHideModal }) => {
 
     isLogin && getListCommentById();
 
-    if (indexVideoOfUser >= 0) {
-      const arrUrl = urlOrigin.split('/');
-      const idFirstVideoModal = Number(arrUrl[arrUrl.length - 1]);
-      if (idFirstVideoModal === videoId) {
-        for (let index = 0; index < videoListUser.length; index++) {
-          const { id } = videoListUser[index];
-          if (id === idFirstVideoModal) setVideo(videoListUser[index]);
-        }
-      } else {
-        setVideo(videoListUser[indexVideoOfUser]);
-      }
-    }
+    // if (indexVideoOfUser >= 0) {
+    //   const arrUrl = urlOrigin.split('/');
+    //   const idFirstVideoModal = Number(arrUrl[arrUrl.length - 1]);
+    //   if (idFirstVideoModal === videoId) {
+    //     for (let index = 0; index < videoListPage.length; index++) {
+    //       const { id } = videoListPage[index];
+    //       if (id === idFirstVideoModal) {
+    //         setVideo(videoListPage[index]);
+    //         break;
+    //       }
+    //     }
+    //   } else {
+    //     setVideo(videoListPage[indexVideoOfUser]);
+    //   }
+    // }
+    setVideo(videoListPage[indexVideo]);
 
     setIsLoading(false);
-  }, [videoId, indexVideoOfUser]);
+  }, [videoId, indexVideo]);
 
   useEffect(() => {
     const borderActive = '2px solid rgba(255, 255, 255, 0.9';
@@ -174,49 +185,149 @@ const VideoModal = ({ onHideModal }) => {
   }, [active]);
 
   useEffect(() => {
-    const getListVideoUser = async () => {
-      const listVideoUser = await getListVideoOfUser(userId);
-      setVideoListUser(listVideoUser);
-    };
     const getVideoById = async () => {
       const data = await getVideo(videoId);
       setVideo(data);
+      setHistoryVideo({
+        videoCurrent: data,
+        listVideo: videoListPage,
+        status: false,
+        indexVideo,
+      });
     };
     getVideoById();
-    getListVideoUser();
     setUrlOrigin(window.location.pathname);
-
-    document.addEventListener('keydown', handleKeydown);
-
-    return () => document.removeEventListener('keydown', handleKeydown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleShowVideoUserModal = (e) => {
-    const indexVideoClicked = e.target.attributes[0].value;
-    const { id: videoId } = videoListUser[indexVideoClicked];
-    dispatch(setIdVideoPlay(videoId));
-    setIndexVideoOfUser(indexVideoClicked);
-  };
+  useEffect(() => {
+    const getVideoListUser = async () => {
+      const data = await getListVideoOfUser(userId);
+      setVideoListOfUser(data.reverse());
+    };
+    getVideoListUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
-  const handleKeydown = (e) => {
+  useEffect(() => {
+    listenEvent === 'Modal' && document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [listenEvent]);
+
+  useLayoutEffect(() => {
+    handleScrollElement(positionCurrentElement);
+    console.log(positionCurrentElement);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionCurrentElement]);
+
+  const handleKeyDown = (e) => {
     //pre
     const ARROW_UP = 38;
     const ARROW_DOWN = 40;
     if (e.keyCode === ARROW_UP) {
       e.preventDefault();
+      setTimeout(() => {
+        setPositionCurrentElement((prev) => {
+          const indexCurrVideo = prev <= 0 ? 0 : prev - 1;
+          const {
+            id: videoId,
+            user: { id: userId, nickname: nicknameUser },
+          } = videoListPage[indexCurrVideo];
+          dispatch(
+            setInfoCurrentVideo({
+              videoId,
+              userId,
+              nicknameUser,
+              indexVideo: indexCurrVideo,
+            }),
+          );
+          return indexCurrVideo;
+        });
+      }, 300);
     }
     //next
     if (e.keyCode === ARROW_DOWN) {
       e.preventDefault();
+      setTimeout(() => {
+        setPositionCurrentElement((prev) => {
+          const indexCurrVideo = prev < videoListPage.length - 1 ? prev + 1 : prev;
+          const {
+            id: videoId,
+            user: { id: userId, nickname: nicknameUser },
+          } = videoListPage[indexCurrVideo];
+          dispatch(
+            setInfoCurrentVideo({
+              videoId,
+              userId,
+              nicknameUser,
+              indexVideo: indexCurrVideo,
+            }),
+          );
+          return indexCurrVideo;
+        });
+      }, 300);
+    }
+  };
+
+  const handleScrollElement = (position) => {
+    wrapperRef.current?.childNodes[position]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  };
+
+  const handleShowVideoUserModal = (e) => {
+    setHistoryVideo((prev) => ({ ...prev, status: true }));
+    const indexVideoClicked = e.target.attributes[0].value;
+    const {
+      id: videoId,
+      user: { id: userId, nickname: nicknameUser },
+    } = videoListOfUser[indexVideoClicked];
+    setIsPlaying(true);
+    dispatch(
+      setInfoCurrentVideo({
+        videoId,
+        userId,
+        nicknameUser,
+        indexVideo: +indexVideoClicked,
+      }),
+    );
+    if (videoListOfUser !== videoListPage) {
+      setPositionCurrentElement(+indexVideoClicked);
+      dispatch(setListenEvent('Modal'));
+      dispatch(setCurrentListVideo(videoListOfUser));
     }
   };
 
   const handleBackToFirstModal = () => {
-    onHideModal(urlOrigin);
-    const idFirstModal = urlOrigin.split('/');
-    dispatch(setIdVideoPlay(Number(idFirstModal[idFirstModal.length - 1])));
+    const { videoCurrent, listVideo, indexVideo } = historyVideo;
+    setVideo(videoCurrent);
+    for (let index = 0; index < videoListPage.length; index++) {
+      const videoId = videoListPage[index].id;
+      if (videoId === videoCurrent.id) {
+        handleScrollElement(index);
+        break;
+      }
+    }
+    setHistoryVideo((prev) => ({
+      ...prev,
+      status: false,
+    }));
+    dispatch(
+      setInfoCurrentVideo({
+        videoId: videoCurrent.id,
+        userId: videoCurrent.user.id,
+        nicknameUser: videoCurrent.user.nickname,
+        indexVideo,
+      }),
+    );
+    dispatch(setListenEvent('Home'));
+    dispatch(setCurrentListVideo(listVideo));
   };
+
+  const handleBackVideo = () => {};
+  const handleNextVideo = () => {};
+
   function onMount() {
     setSpring({
       opacity: 1,
@@ -248,8 +359,10 @@ const VideoModal = ({ onHideModal }) => {
       config: { tension: 300, duration: 100 },
     });
   }
-  const handleToggleVideo = () => {
-    setIsPlaying(!isPlaying);
+  const handleToggleVideo = (e) => {
+    if (videoRef?.current === e.target) {
+      setIsPlaying(!isPlaying);
+    }
   };
 
   const handleMouseVideoUser = (e) => {
@@ -293,7 +406,7 @@ const VideoModal = ({ onHideModal }) => {
             </picture>
           </span>
         </div>
-        <div className={cx('video-wrapper')} onClick={handleToggleVideo}>
+        <div className={cx('video-wrapper')}>
           <div className={cx('video-background-blur')}>
             <div className={cx('video-layout-wrapper')}>
               <video
@@ -302,6 +415,7 @@ const VideoModal = ({ onHideModal }) => {
                 ref={videoRef}
                 loop
                 autoPlay
+                onClick={handleToggleVideo}
                 onTimeUpdate={handleUpdateTimer}
                 onWaiting={handleWaitingVideo}
                 onPlaying={handlePlayingVideo}
@@ -337,14 +451,14 @@ const VideoModal = ({ onHideModal }) => {
           )}
         </div>
         {!isPlaying && <FontAwesomeIcon icon={faPlay} className={cx('play-icon')} />}
-        {urlOrigin === window.location.pathname ? (
+        {!historyVideo.status ? (
           <button className={cx('close-btn-container')} onClick={() => onHideModal()}>
             <CancelIcon className={cx('custom-close-icon')} width="2.5rem" height="2.5rem" />
           </button>
         ) : (
           <button className={cx('custom-btn-close')} onClick={handleBackToFirstModal}>
             <CancelIcon className={cx('custom-close-icon')} width="2.5rem" height="2.5rem" />
-            <span className={cx('text-close')}>Click to back first modal</span>
+            <span className={cx('text-close')}>Thoát video của nhà sáng tạo</span>
           </button>
         )}
         <div
@@ -382,10 +496,10 @@ const VideoModal = ({ onHideModal }) => {
             )}
           </div>
         </div>
-        <button className={cx('arrow-video-switch', 'arrow-up')}>
+        <button className={cx('arrow-video-switch', 'arrow-up')} onClick={handleBackVideo}>
           <Arrow />
         </button>
-        <button className={cx('arrow-video-switch', 'arrow-down')}>
+        <button className={cx('arrow-video-switch', 'arrow-down')} onClick={handleNextVideo}>
           <Arrow />
         </button>
         {urlOrigin === window.location.pathname ? (
@@ -430,12 +544,20 @@ const VideoModal = ({ onHideModal }) => {
       <div className={cx('content-container')}>
         <div className={cx('description-content-wrapper')}>
           <div className={cx('info-container')}>
-            <a href="#" className={cx('style-link')}>
+            <Link
+              to={`/@${video.user?.nickname}`}
+              className={cx('style-link')}
+              onClick={() => onHideModal(video.user?.nickname)}
+            >
               <div className={cx('avatar-container')}>
                 <Image src={video.user?.avatar} alt="avatar" className={cx('image-avatar')} />
               </div>
-            </a>
-            <a href="#" className={cx('info-content')}>
+            </Link>
+            <Link
+              to={`/@${video.user?.nickname}`}
+              className={cx('info-content')}
+              onClick={() => onHideModal(video.user?.nickname)}
+            >
               <span className={cx('nickname')}>{video.user?.nickname}</span>
               <br />
               <span className={cx('username')}>
@@ -443,7 +565,7 @@ const VideoModal = ({ onHideModal }) => {
                 <span style={{ margin: '0px 4px' }}>.</span>
                 <span>{video.created_at}</span>
               </span>
-            </a>
+            </Link>
             <Follow isCurrStateFollow={true} />
           </div>
           <div className={cx('main-content')}>
@@ -556,31 +678,33 @@ const VideoModal = ({ onHideModal }) => {
                         </div>
                       </div>
                       <div className={cx('comment-action')}>
-                        <Tippy
-                          interactive
-                          placement="bottom-end"
-                          offset={[0, 0]}
-                          delay={[0, 100]}
-                          render={(attrs) => (
-                            <animated.div className={cx('popper-container')} tabIndex="-1" {...attrs} style={prop1}>
-                              <div className={cx('popup-report-container')}>
-                                <div className={cx('popup-report-content')}>
-                                  <p className={cx('action-item')}>
-                                    <FlagIcon width="400" height="450" marginBottom="0" />
-                                    <span className={cx('span-action')}>Báo cáo</span>
-                                  </p>
+                        <div>
+                          <Tippy
+                            interactive
+                            placement="bottom-end"
+                            offset={[0, 0]}
+                            delay={[0, 100]}
+                            render={(attrs) => (
+                              <animated.div className={cx('popper-container')} tabIndex="-1" {...attrs} style={prop1}>
+                                <div className={cx('popup-report-container')}>
+                                  <div className={cx('popup-report-content')}>
+                                    <p className={cx('action-item')}>
+                                      <FlagIcon width="400" height="450" marginBottom="0" />
+                                      <span className={cx('span-action')}>Báo cáo</span>
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
-                            </animated.div>
-                          )}
-                          animation
-                          onHide={onHide1}
-                          onMount={onMount1}
-                        >
-                          <div ref={menuRef} className={cx('custom-menu-icon', 'display-menu')}>
-                            <MenuIcon width="2.2rem" height="2.2rem" />
-                          </div>
-                        </Tippy>
+                              </animated.div>
+                            )}
+                            animation
+                            onHide={onHide1}
+                            onMount={onMount1}
+                          >
+                            <div ref={menuRef} className={cx('custom-menu-icon', 'display-menu')}>
+                              <MenuIcon width="2.2rem" height="2.2rem" />
+                            </div>
+                          </Tippy>
+                        </div>
                         <div className={cx('like-wrapper')}>
                           <HeartIconRegular />
                           <span className={cx('like-count')}>{comment?.likes_count}</span>
@@ -594,7 +718,7 @@ const VideoModal = ({ onHideModal }) => {
         ) : (
           <div className={cx('list-container')}>
             <div className={cx('video-list-container')} ref={wrapperRef}>
-              {videoListUser.map((videoUser, index) => (
+              {videoListOfUser.map((videoUser, index) => (
                 <div
                   data-index={videoId === videoUser?.id ? index : ' '}
                   className={cx('item-container')}
@@ -607,7 +731,7 @@ const VideoModal = ({ onHideModal }) => {
                       onMouseEnter={handleMouseVideoUser}
                       className={cx('image-user-create')}
                     />
-                    {videoId === videoUser?.id && (
+                    {video.id === videoUser?.id && (
                       <div className={cx('playing-mark-container')}>
                         <div className={cx('playing-mask-wrapper')}>
                           <div className={cx('wrapper-icon-animation')}>
@@ -625,7 +749,7 @@ const VideoModal = ({ onHideModal }) => {
                         </div>
                       </div>
                     )}
-                    {videoId !== videoUser?.id && (
+                    {video.id !== videoUser?.id && (
                       <video
                         data-index={index}
                         className={cx('video-user-create')}

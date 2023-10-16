@@ -5,10 +5,15 @@ export const videoSlice = createSlice({
   initialState: {
     defaultVolume: 0.5,
     isMuted: true,
-    videoId: '',
-    userId: '',
-    nicknameUser: '',
-    index: [],
+    infoCurrentVideo: {
+      videoId: null,
+      userId: null,
+      nicknameUser: '',
+      indexVideo: null,
+    },
+    indexListInView: [],
+    videoListPage: [],
+    listenEvent: "Home",
   },
   reducers: {
     adjustVolume: (state, action) => {
@@ -17,19 +22,20 @@ export const videoSlice = createSlice({
     muteVolume: (state, action) => {
       state.isMuted = action.payload;
     },
-    setIdVideoPlay: (state, action) => {
-      state.videoId = action.payload;
+    setInfoCurrentVideo: (state, action) => {
+      state.infoCurrentVideo = action.payload;
     },
-    setIdUserListVideo: (state, action) => {
-      state.userId = action.payload;
-    },
-    setNickNameUser: (state, action) => {
-      state.nicknameUser = action.payload;
-    },
+    
     updateInviewList: (state, action) => {
-      const cloneIndexArr = [...state.index];
+      const cloneIndexArr = [...state.indexListInView];
       cloneIndexArr.splice(action.payload.index, 1, action.payload);
-      state.index = cloneIndexArr;
+      state.indexListInView = cloneIndexArr;
+    },
+    setCurrentListVideo: (state, action) => {
+      state.videoListPage = action.payload;
+    },
+    setListenEvent: (state, action) => {
+      state.listenEvent = action.payload;
     },
   },
 });
@@ -37,10 +43,9 @@ export const videoSlice = createSlice({
 export const {
   adjustVolume,
   muteVolume,
-  setIdVideoPlay,
-  setIdUserListVideo,
-  setStateIndexView,
-  setNickNameUser,
+  setInfoCurrentVideo,
   updateInviewList,
+  setCurrentListVideo,
+  setListenEvent,
 } = videoSlice.actions;
 export default videoSlice.reducer;

@@ -3,17 +3,19 @@ import styles from './VideoPreview.module.scss';
 import Image from '../../Images/Images';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIdUserListVideo, setIdVideoPlay, setNickNameUser } from '~/redux/videoSlice';
+import { setInfoCurrentVideo, setListenEvent } from '~/redux/videoSlice';
 import TiktokLoading from '../../Loadings/TiktokLoading';
 import { VideoContext } from '~/context/VideoContext';
 
 const cx = classNames.bind(styles);
 
-const VideoPreview = ({ video }) => {
-  const videoID = useSelector((state) => state.video.videoId);
+const VideoPreview = ({ video, indexVideo }) => {
   const [isLoadingVideo, setIsLoadingVideo] = useState(false);
-  const dispatch = useDispatch();
   const videoRef = useRef(null);
+
+  const dispatch = useDispatch();
+  const videoID = useSelector((state) => state.video.infoCurrentVideo.videoId);
+
   const { handleShowVideoModal: onShowVideoModal } = useContext(VideoContext);
   useEffect(() => {
     if (videoID === video.id) {
@@ -35,12 +37,26 @@ const VideoPreview = ({ video }) => {
   };
 
   const handleClickVideoPreview = () => {
-    dispatch(setIdUserListVideo(video.user.id));
-    dispatch(setNickNameUser(video.user.nickname));
+    dispatch(setListenEvent('Modal'));
+    dispatch(
+      setInfoCurrentVideo({
+        videoId: video.id,
+        userId: video.user.id,
+        nicknameUser: video.user.nickname,
+        indexVideo: indexVideo,
+      }),
+    );
     onShowVideoModal();
   };
   const handleMouseVideo = () => {
-    dispatch(setIdVideoPlay(video.id));
+    dispatch(
+      setInfoCurrentVideo({
+        videoId: video.id,
+        userId: video.user.id,
+        nicknameUser: video.user.nickname,
+        indexVideo: indexVideo,
+      }),
+    );
   };
 
   return (

@@ -17,14 +17,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useClickAway } from 'react-use';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIdUserListVideo, setIdVideoPlay, setNickNameUser, updateInviewList } from '~/redux/videoSlice';
+import { setInfoCurrentVideo, updateInviewList } from '~/redux/videoSlice';
 import { useControl } from '~/hooks';
 import TiktokLoading from '~/components/Loadings/TiktokLoading';
 import TippyShare from '~/components/Tippy/TippyShare';
 
 const cx = classNames.bind(styles);
 
-function VideoContent({ data, index, indexInView, priorVideo, currentElement: setCurrentElement }) {
+function VideoContent({ data, index, indexInView, priorVideo }) {
   const [playing, setPlaying] = useState(false);
   const [userInteract, setUserInteract] = useState(false);
 
@@ -41,7 +41,9 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement: se
   const directionVideoClass = frameRate ? 'horizontal' : 'vertical';
   const [inViewRef, isInView] = useInView({ root: null, threshold: 0.57 });
 
-  const { handleShowVideoModal: onShowModal } = useContext(VideoContext);
+  //context
+  const { isShowVideoModal, handleShowVideoModal: onShowModal,handleSetCurrentElement } = useContext(VideoContext);
+
   //refs
   const videoContainerRef = useRef(null);
 
@@ -81,20 +83,35 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement: se
 
   useLayoutEffect(() => {
     handleUpdateInview(index, isInView);
-    isInView && setCurrentElement(index);
+    if(isInView) {
+      handleSetCurrentElement(index);
+      dispatch(setInfoCurrentVideo({
+        videoId,
+        userId,
+        nicknameUser,
+        indexVideo: index,
+      }));
+    }
   }, [isInView]);
 
   useEffect(() => {
     if (indexInView) {
-      setPlaying(true);
-      videoRef.current.play();
+      if (isShowVideoModal) {
+        setPlaying(false);
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+        timerTrackRef.current.style.width = '0px';
+      } else {
+        setPlaying(true);
+        videoRef.current.play();
+      }
     } else {
       setPlaying(false);
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
       timerTrackRef.current.style.width = '0px';
     }
-  }, [indexInView]);
+  }, [indexInView, isShowVideoModal]);
 
   useEffect(() => {
     const currentScrollPos = window.scrollY;
@@ -195,9 +212,14 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement: se
   };
 
   const handleShowVideoModal = () => {
-    dispatch(setIdUserListVideo(userId));
-    dispatch(setIdVideoPlay(videoId));
-    dispatch(setNickNameUser(nicknameUser));
+    dispatch(
+      setInfoCurrentVideo({
+        videoId,
+        userId,
+        nicknameUser,
+        indexVideo: index,
+      }),
+    );
     onShowModal();
   };
 
@@ -337,7 +359,7 @@ function VideoContent({ data, index, indexInView, priorVideo, currentElement: se
           </strong>
         </button>
 
-        <button className={cx('btn-cmt')}>
+        <button className={cx('btn-cmt')} onClick={handleShowVideoModal}>
           <span className={cx('icon-heart')}>
             <FontAwesomeIcon icon={faComment} />
           </span>

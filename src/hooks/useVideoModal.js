@@ -15,11 +15,16 @@ const useVideoModal = () => {
     setUrlOrigin(window.location.pathname);
   };
 
-  const handleHideVideoModal = (originPathname = null) => {
+  const handleHideVideoModal = (pathname = null) => {
     document.body.style.overflowY = 'overlay';
-    if (!originPathname) {
+    if (!pathname) {
       setIsShowVideoModal(false);
-      window.history.replaceState(null,'',pahtnameOrigin);
+      window.history.replaceState(null, '', pahtnameOrigin);
+    } else if (pahtnameOrigin === `/@${pathname}`) {
+      window.history.pushState(null, '', `/@${pathname}`);
+      setIsShowVideoModal(false);
+    } else {
+      setIsShowVideoModal(false);
     }
     window.removeEventListener('popstate', handleDetectBackHistory);
   };
