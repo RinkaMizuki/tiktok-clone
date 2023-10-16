@@ -51,7 +51,6 @@ const VideoModal = ({ onHideModal }) => {
   const [positionCurrentElement, setPositionCurrentElement] = useState(0);
   const [copyLink, setCopyLink] = useState('');
   const [active, setActive] = useState('comment');
-  const [urlOrigin, setUrlOrigin] = useState('/');
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -131,22 +130,6 @@ const VideoModal = ({ onHideModal }) => {
     };
 
     isLogin && getListCommentById();
-
-    // if (indexVideoOfUser >= 0) {
-    //   const arrUrl = urlOrigin.split('/');
-    //   const idFirstVideoModal = Number(arrUrl[arrUrl.length - 1]);
-    //   if (idFirstVideoModal === videoId) {
-    //     for (let index = 0; index < videoListPage.length; index++) {
-    //       const { id } = videoListPage[index];
-    //       if (id === idFirstVideoModal) {
-    //         setVideo(videoListPage[index]);
-    //         break;
-    //       }
-    //     }
-    //   } else {
-    //     setVideo(videoListPage[indexVideoOfUser]);
-    //   }
-    // }
     setVideo(videoListPage[indexVideo]);
 
     setIsLoading(false);
@@ -196,7 +179,6 @@ const VideoModal = ({ onHideModal }) => {
       });
     };
     getVideoById();
-    setUrlOrigin(window.location.pathname);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -381,7 +363,7 @@ const VideoModal = ({ onHideModal }) => {
   return (
     <div className={cx('modal-container')}>
       <div className={cx('video-container')}>
-        {urlOrigin === window.location.pathname && (
+        {videoListOfUser !== videoListPage && (
           <div className={cx('search-bar-container')}>
             <div className={cx('search-bar-background')}></div>
             <div className={cx('search-box-container')}>
@@ -502,7 +484,7 @@ const VideoModal = ({ onHideModal }) => {
         <button className={cx('arrow-video-switch', 'arrow-down')} onClick={handleNextVideo}>
           <Arrow />
         </button>
-        {urlOrigin === window.location.pathname ? (
+        {videoListOfUser !== videoListPage ? (
           <Tippy
             interactive
             placement="bottom-end"
